@@ -21,9 +21,9 @@ void tela_equipe(void);
 int main(void) {
  
     tela_principal();
- 
+        getchar();
     tela_sobre();
- 
+        getchar();
     tela_equipe();
  
     return 0;
@@ -85,6 +85,7 @@ void tela_principal(void) {
     printf("///                                                                         ///\n");
  
     printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
  
     printf("\n");
  
@@ -135,6 +136,7 @@ void tela_sobre(void) {
     printf("///                                                                         ///\n");
  
     printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
  
     printf("\n");
  
@@ -188,6 +190,7 @@ void tela_equipe(void) {
     printf("///                                                                         ///\n");
  
     printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
  
     printf("\n");
-    }
+}
