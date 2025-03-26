@@ -11,6 +11,8 @@ void tela_principal(void);
 void tela_sobre(void);
  
 void tela_equipe(void);
+
+void tela_produtos(void);
  
 
  
@@ -56,7 +58,6 @@ void tela_principal(void) {
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///         = = = = = Sistema de Gestão de Chapelaria = = = = =             ///\n");
     printf("///                                                                         ///\n");
     printf("///            1. Módulo Cliente                                            ///\n");
     printf("///            2. Módulo Administrador                                      ///\n");
@@ -64,6 +65,7 @@ void tela_principal(void) {
     printf("///            4. Módulo Encomendas                                         ///\n");
     printf("///            5. Módulo Relatórios                                         ///\n");
     printf("///            0. Sair                                                      ///\n");
+    printf("///                                                                         ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
@@ -119,10 +121,7 @@ void tela_equipe(void) {
     printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
     printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
     printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///         = = = = = Sistema de Gestão de Chapelaria = = = = =             ///\n");
-    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");;
     printf("///            Este projeto foi desenvolvido por:                           ///\n");
     printf("///                                                                         ///\n");
     printf("///            Marco Geovane Araújo                                         ///\n");
@@ -134,6 +133,7 @@ void tela_equipe(void) {
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
     printf("\n");
 }
+
 
 void tela_produtos(void) {
  
@@ -149,7 +149,7 @@ void tela_produtos(void) {
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///         = = = = = Sistema de Gestão de Chapelaria = = = = =             ///\n");
+    printf("///                 = = = = = Gerenciar Produtos = = = = =                  ///\n");
     printf("///                                                                         ///\n");
     printf("///            1. Cadastrar produto                                         ///\n");
     printf("///            2. Pesquisar produto                                         ///\n");
