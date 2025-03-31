@@ -40,8 +40,8 @@ void tela_deletar_cliente(void);
 int main(void) {
     setlocale(LC_ALL, "Portuguese_Brazil");
     tela_principal();
-    getchar();
-    system("cls|clear");
+        getchar();
+        system("cls|clear");
         
     tela_sobre();
         getchar();
