@@ -16,9 +16,13 @@ void tela_equipe(void);
 void tela_produtos(void);
 
 void tela_cadastrar_produto(void);
- 
 
+void tela_pesquisar_produto(void);
  
+void tela_editar_produto(void);
+
+void tela_deletar_produto(void);
+
 /////
  
 // Programa principal
@@ -35,6 +39,13 @@ int main(void) {
         getchar();
     tela_cadastrar_produto();
         getchar();
+    tela_pesquisar_produto();
+        getchar();
+    tela_editar_produto();
+        getchar();
+    tela_deletar_produto();
+        getchar();
+    
     return 0;
  
 }
@@ -174,15 +185,6 @@ void tela_cadastrar_produto(void) {
     printf("\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
-    printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
-    printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
     printf("///                 = = = = = Cadastrar Produto = = = = =                   ///\n");
     printf("///                                                                         ///\n");
     printf("///            Nome do Produto:                                             ///\n");
@@ -194,4 +196,42 @@ void tela_cadastrar_produto(void) {
  
     printf("\n");
  
+}
+
+void tela_pesquisar_produto(void) {
+ 
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Pesquisar Produto = = = = =                   ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            Código do Produto:                                           ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+
+}
+void tela_editar_produto(void) {
+ 
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Editar Produto = = = = =                      ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            Código do Produto:                                           ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+
+}
+void tela_deletar_produto(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Deletar Produto = = = = =                     ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            Código do Produto:                                           ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
 }
