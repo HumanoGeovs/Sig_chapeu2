@@ -23,6 +23,16 @@ void tela_editar_produto(void);
 
 void tela_deletar_produto(void);
 
+void tela_clientes(void);
+
+void tela_cadastrar_cliente(void);
+
+void tela_pesquisar_cliente(void);
+
+void tela_editar_cliente(void);
+
+void tela_deletar_cliente(void);
+
 /////
  
 // Programa principal
@@ -30,22 +40,57 @@ void tela_deletar_produto(void);
 int main(void) {
     setlocale(LC_ALL, "Portuguese_Brazil");
     tela_principal();
-        getchar();
+    getchar();
+    system("cls|clear");
+        
     tela_sobre();
         getchar();
+        system("cls|clear");
+
     tela_equipe();
         getchar();
+        system("cls|clear");
+
     tela_produtos();
         getchar();
+        system("cls|clear");
+
     tela_cadastrar_produto();
         getchar();
+        system("cls|clear");
+
     tela_pesquisar_produto();
         getchar();
+        system("cls|clear");
+
     tela_editar_produto();
         getchar();
+        system("cls|clear");
+
     tela_deletar_produto();
         getchar();
-    
+        system("cls|clear");
+
+    tela_clientes();
+        getchar();
+        system("cls|clear");
+
+    tela_cadastrar_cliente();
+        getchar();
+        system("cls|clear");
+
+    tela_pesquisar_cliente();
+        getchar();
+        system("cls|clear");
+
+    tela_editar_cliente();
+        getchar();
+        system("cls|clear");
+
+    tela_deletar_cliente();
+        getchar();
+        system("cls|clear");
+
     return 0;
  
 }
@@ -76,7 +121,7 @@ void tela_principal(void) {
     printf("///                                                                         ///\n");
     printf("///                                                                         ///\n");
     printf("///            1. Módulo Cliente                                            ///\n");
-    printf("///            2. Módulo Administrador                                      ///\n");
+    printf("///            2. Módulo Produtos                                           ///\n");
     printf("///            3. Módulo Equipe                                             ///\n");
     printf("///            4. Módulo Encomendas                                         ///\n");
     printf("///            5. Módulo Relatórios                                         ///\n");
@@ -175,7 +220,6 @@ void tela_produtos(void) {
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
- 
     printf("\n");
  
 }
@@ -193,7 +237,6 @@ void tela_cadastrar_produto(void) {
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
- 
     printf("\n");
  
 }
@@ -234,4 +277,86 @@ void tela_deletar_produto(void) {
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+}
+
+ 
+void tela_clientes(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///               Departamento de Computação e Tecnologia                   ///\n");
+    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
+    printf("///                          Projeto Sig-Chapéu                             ///\n");
+    printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
+    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
+    printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Gerenciar Clientes = = = = =                  ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            1. Cadastrar Cliente                                         ///\n");
+    printf("///            2. Pesquisar Cliente                                         ///\n");
+    printf("///            3. Editar Cliente                                            ///\n");
+    printf("///            4. Deletar Cliente                                           ///\n");
+    printf("///            0. Sair                                                      ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
+}
+
+void tela_cadastrar_cliente(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Cadastrar Cliente = = = = =                   ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            Nome do Cliente:                                             ///\n");
+    printf("///            CPF do Cliente:                                              ///\n");
+    printf("///            Telefone:                                                    ///\n");
+    printf("///            Endereço:                                                    ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
+}
+
+void tela_pesquisar_cliente(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Pesquisar Cliente = = = = =                   ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            CPF do Cliente:                                              ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
+}
+
+void tela_editar_cliente(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Editar Cliente = = = = =                      ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            CPF do Cliente:                                              ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
+}
+
+void tela_deletar_cliente(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Deletar Cliente = = = = =                     ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            CPF do Cliente:                                              ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
 }
