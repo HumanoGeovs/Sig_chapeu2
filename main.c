@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <locale.h>
+#include "clientes.h"
+
  
 
  
@@ -22,16 +24,6 @@ void tela_pesquisar_produto(void);
 void tela_editar_produto(void);
 
 void tela_deletar_produto(void);
-
-void tela_clientes(void);
-
-void tela_cadastrar_cliente(void);
-
-void tela_pesquisar_cliente(void);
-
-void tela_editar_cliente(void);
-
-void tela_deletar_cliente(void);
 
 void tela_encomendas(void);
 
@@ -81,26 +73,6 @@ int main(void) {
         getchar();
         system("cls|clear");
 
-    tela_clientes();
-        getchar();
-        system("cls|clear");
-
-    tela_cadastrar_cliente();
-        getchar();
-        system("cls|clear");
-
-    tela_pesquisar_cliente();
-        getchar();
-        system("cls|clear");
-
-    tela_editar_cliente();
-        getchar();
-        system("cls|clear");
-
-    tela_deletar_cliente();
-        getchar();
-        system("cls|clear");
-
     tela_encomendas();
         getchar();
         system("cls|clear");
@@ -127,11 +99,9 @@ int main(void) {
  
 
  
-
- 
 /////
  
-// Funções
+// Fun??es
  
 
  
@@ -140,11 +110,11 @@ void tela_principal(void) {
     printf("\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
+    printf("///               Departamento de Computa??o e Tecnologia                   ///\n");
+    printf("///                  Disciplina DCT1106 -- Programa??o                      ///\n");
+    printf("///                          Projeto Sig-Chap?u                             ///\n");
     printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
+    printf("///               Projeto Sistema de Gest?o de Chapelaria                   ///\n");
     printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
@@ -174,18 +144,18 @@ void tela_sobre(void) {
     printf("\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
+    printf("///               Departamento de Computa??o e Tecnologia                   ///\n");
+    printf("///                  Disciplina DCT1106 -- Programa??o                      ///\n");
+    printf("///                          Projeto Sig-Chap?u                             ///\n");
     printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
+    printf("///               Projeto Sistema de Gest?o de Chapelaria                   ///\n");
     printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///         = = = = = Sistema de Gestão de Chapelaria = = = = =             ///\n");
+    printf("///         = = = = = Sistema de Gest?o de Chapelaria = = = = =             ///\n");
     printf("///                                                                         ///\n");
-    printf("///  Programa visa facilitar encomendas e previsão de entregas  de uma      ///\n");
+    printf("///  Programa visa facilitar encomendas e previs?o de entregas  de uma      ///\n");
     printf("///  Chapelaria ou estabelecimentos semelhantes que trabalhem com este ou   ///\n");
     printf("///  outro tipo de produto, para assim facilitar tanto para o cliente quanto///\n");
     printf("///  para os funcionarios da chapelaria ou semelhante.                      ///\n");
@@ -205,17 +175,17 @@ void tela_equipe(void) {
     printf("\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
+    printf("///               Departamento de Computa??o e Tecnologia                   ///\n");
+    printf("///                  Disciplina DCT1106 -- Programa??o                      ///\n");
+    printf("///                          Projeto Sig-Chap?u                             ///\n");
     printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
+    printf("///               Projeto Sistema de Gest?o de Chapelaria                   ///\n");
     printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");;
     printf("///            Este projeto foi desenvolvido por:                           ///\n");
     printf("///                                                                         ///\n");
-    printf("///            Marco Geovane Araújo                                         ///\n");
+    printf("///            Marco Geovane Ara?jo                                         ///\n");
     printf("///            E-mail: marcogeovane71@gmail.com                             ///\n");
     printf("///            Redes sociais: @Name.Is.Marco                                ///\n");
     printf("///            Git: https://github.com/HumanoGeovs/Sig_chapeu2.git          ///\n");
@@ -231,11 +201,11 @@ void tela_produtos(void) {
     printf("\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
+    printf("///               Departamento de Computa??o e Tecnologia                   ///\n");
+    printf("///                  Disciplina DCT1106 -- Programa??o                      ///\n");
+    printf("///                          Projeto Sig-Chap?u                             ///\n");
     printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
+    printf("///               Projeto Sistema de Gest?o de Chapelaria                   ///\n");
     printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
@@ -262,8 +232,8 @@ void tela_cadastrar_produto(void) {
     printf("///                 = = = = = Cadastrar Produto = = = = =                   ///\n");
     printf("///                                                                         ///\n");
     printf("///            Nome do Produto:                                             ///\n");
-    printf("///            Código do Produto:                                           ///\n");
-    printf("///            Descrição do Produto:                                        ///\n");
+    printf("///            C?digo do Produto:                                           ///\n");
+    printf("///            Descri??o do Produto:                                        ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
@@ -278,7 +248,7 @@ void tela_pesquisar_produto(void) {
     printf("///                                                                         ///\n");
     printf("///                 = = = = = Pesquisar Produto = = = = =                   ///\n");
     printf("///                                                                         ///\n");
-    printf("///            Código do Produto:                                           ///\n");
+    printf("///            C?digo do Produto:                                           ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
@@ -291,7 +261,7 @@ void tela_editar_produto(void) {
     printf("///                                                                         ///\n");
     printf("///                 = = = = = Editar Produto = = = = =                      ///\n");
     printf("///                                                                         ///\n");
-    printf("///            Código do Produto:                                           ///\n");
+    printf("///            C?digo do Produto:                                           ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
@@ -303,7 +273,7 @@ void tela_deletar_produto(void) {
     printf("///                                                                         ///\n");
     printf("///                 = = = = = Deletar Produto = = = = =                     ///\n");
     printf("///                                                                         ///\n");
-    printf("///            Código do Produto:                                           ///\n");
+    printf("///            C?digo do Produto:                                           ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
@@ -314,11 +284,11 @@ void tela_clientes(void) {
     printf("\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
+    printf("///               Departamento de Computa??o e Tecnologia                   ///\n");
+    printf("///                  Disciplina DCT1106 -- Programa??o                      ///\n");
+    printf("///                          Projeto Sig-Chap?u                             ///\n");
     printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
+    printf("///               Projeto Sistema de Gest?o de Chapelaria                   ///\n");
     printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
@@ -345,7 +315,7 @@ void tela_cadastrar_cliente(void) {
     printf("///            Nome do Cliente:                                             ///\n");
     printf("///            CPF do Cliente:                                              ///\n");
     printf("///            Telefone:                                                    ///\n");
-    printf("///            Endereço:                                                    ///\n");
+    printf("///            Endere?o:                                                    ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
@@ -395,11 +365,11 @@ void tela_encomendas(void) {
     printf("\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
+    printf("///               Departamento de Computa??o e Tecnologia                   ///\n");
+    printf("///                  Disciplina DCT1106 -- Programa??o                      ///\n");
+    printf("///                          Projeto Sig-Chap?u                             ///\n");
     printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
+    printf("///               Projeto Sistema de Gest?o de Chapelaria                   ///\n");
     printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
@@ -424,8 +394,8 @@ void tela_cadastrar_encomenda(void) {
     printf("///                 = = = = = Cadastrar Encomenda = = = = =                 ///\n");
     printf("///                                                                         ///\n");
     printf("///            Nome do Cliente:                                             ///\n");
-    printf("///            Código da Encomenda:                                         ///\n");
-    printf("///            Descrição do Produto:                                        ///\n");
+    printf("///            C?digo da Encomenda:                                         ///\n");
+    printf("///            Descri??o do Produto:                                        ///\n");
     printf("///            Data de Entrega:                                             ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
@@ -439,7 +409,7 @@ void tela_pesquisar_encomenda(void) {
     printf("///                                                                         ///\n");
     printf("///                 = = = = = Pesquisar Encomenda = = = = =                 ///\n");
     printf("///                                                                         ///\n");
-    printf("///            Código da Encomenda:                                         ///\n");
+    printf("///            C?digo da Encomenda:                                         ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
@@ -452,7 +422,7 @@ void tela_editar_encomenda(void) {
     printf("///                                                                         ///\n");
     printf("///                 = = = = = Editar Encomenda = = = = =                    ///\n");
     printf("///                                                                         ///\n");
-    printf("///            Código da Encomenda:                                         ///\n");
+    printf("///            C?digo da Encomenda:                                         ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
@@ -465,7 +435,7 @@ void tela_deletar_encomenda(void) {
     printf("///                                                                         ///\n");
     printf("///                 = = = = = Deletar Encomenda = = = = =                   ///\n");
     printf("///                                                                         ///\n");
-    printf("///            Código da Encomenda:                                         ///\n");
+    printf("///            C?digo da Encomenda:                                         ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
