@@ -33,6 +33,16 @@ void tela_editar_cliente(void);
 
 void tela_deletar_cliente(void);
 
+void tela_encomendas(void);
+
+void tela_cadastrar_encomenda(void);
+
+void tela_pesquisar_encomenda(void);
+
+void tela_editar_encomenda(void);
+
+void tela_deletar_encomenda(void);
+
 /////
  
 // Programa principal
@@ -91,6 +101,26 @@ int main(void) {
         getchar();
         system("cls|clear");
 
+    tela_encomendas();
+        getchar();
+        system("cls|clear");
+
+    tela_cadastrar_encomenda();
+        getchar();
+        system("cls|clear");
+
+    tela_pesquisar_encomenda();
+        getchar();
+        system("cls|clear");
+
+    tela_editar_encomenda();
+        getchar();
+        system("cls|clear");
+
+    tela_deletar_encomenda();
+        getchar();
+        system("cls|clear");
+
     return 0;
  
 }
@@ -120,11 +150,11 @@ void tela_principal(void) {
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("///                                                                         ///\n");
     printf("///                                                                         ///\n");
-    printf("///            1. Módulo Cliente                                            ///\n");
-    printf("///            2. Módulo Produtos                                           ///\n");
-    printf("///            3. Módulo Equipe                                             ///\n");
-    printf("///            4. Módulo Encomendas                                         ///\n");
-    printf("///            5. Módulo Relatórios                                         ///\n");
+    printf("///            1. Cliente                                                   ///\n");
+    printf("///            2. Produtos                                                  ///\n");
+    printf("///            3. Encomendas                                                ///\n");
+    printf("///            4. Equipe                                                    ///\n");
+    printf("///            5. Sobre                                                     ///\n");
     printf("///            0. Sair                                                      ///\n");
     printf("///                                                                         ///\n");
     printf("///                                                                         ///\n");
@@ -355,6 +385,87 @@ void tela_deletar_cliente(void) {
     printf("///                 = = = = = Deletar Cliente = = = = =                     ///\n");
     printf("///                                                                         ///\n");
     printf("///            CPF do Cliente:                                              ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
+}
+
+void tela_encomendas(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///               Departamento de Computação e Tecnologia                   ///\n");
+    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
+    printf("///                          Projeto Sig-Chapéu                             ///\n");
+    printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
+    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
+    printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Gerenciar Encomendas = = = = =                ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            1. Cadastrar Encomenda                                       ///\n");
+    printf("///            2. Pesquisar Encomenda                                       ///\n");
+    printf("///            3. Editar Encomenda                                          ///\n");
+    printf("///            4. Deletar Encomenda                                         ///\n");
+    printf("///            0. Sair                                                      ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
+}
+
+void tela_cadastrar_encomenda(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Cadastrar Encomenda = = = = =                 ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            Nome do Cliente:                                             ///\n");
+    printf("///            Código da Encomenda:                                         ///\n");
+    printf("///            Descrição do Produto:                                        ///\n");
+    printf("///            Data de Entrega:                                             ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
+}
+
+void tela_pesquisar_encomenda(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Pesquisar Encomenda = = = = =                 ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            Código da Encomenda:                                         ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
+}
+
+void tela_editar_encomenda(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Editar Encomenda = = = = =                    ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            Código da Encomenda:                                         ///\n");
+    printf("///                                                                         ///\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("\n");
+}
+
+void tela_deletar_encomenda(void) {
+    printf("\n");
+    printf("///////////////////////////////////////////////////////////////////////////////\n");
+    printf("///                                                                         ///\n");
+    printf("///                 = = = = = Deletar Encomenda = = = = =                   ///\n");
+    printf("///                                                                         ///\n");
+    printf("///            Código da Encomenda:                                         ///\n");
     printf("///                                                                         ///\n");
     printf("///////////////////////////////////////////////////////////////////////////////\n");
     printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
