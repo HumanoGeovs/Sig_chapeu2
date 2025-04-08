@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "encomendas.h"
 
 void tela_encomendas(void) {

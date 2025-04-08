@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "produtos.h"
 
 void tela_produtos(void) {
