@@ -28,14 +28,6 @@ int main(void) {
     tela_principal();
         getchar();
         system("cls|clear");
-        
-    tela_sobre();
-        getchar();
-        system("cls|clear");
-
-    tela_equipe();
-        getchar();
-        system("cls|clear");
 
     return 0;
  

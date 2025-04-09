@@ -1,7 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h> // Adicionado para usar a função strtok
 #include "clientes.h"
 
+void salvar_cliente(const char* nome, const char* cpf, const char* telefone, const char* endereco) {
+    FILE* arquivo = fopen("clientes.txt", "a");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo de clientes.\n");
+        return;
+    }
+    fprintf(arquivo, "%s;%s;%s;%s\n", nome, cpf, telefone, endereco);
+    fclose(arquivo);
+}
+
+void listar_clientes(void) {
+    FILE* arquivo = fopen("clientes.txt", "r");
+    if (arquivo == NULL) {
+        printf("Nenhum cliente cadastrado.\n");
+        return;
+    }
+    char linha[256];
+    printf("Clientes cadastrados:\n");
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        char nome[50];
+        sscanf(linha, "%49[^;]", nome); // Lê o nome até o primeiro delimitador ';'
+        printf("%s\n", nome);
+    }
+    fclose(arquivo);
+}
 
 void tela_clientes(void) {
     int opcao;
@@ -64,56 +90,127 @@ void tela_clientes(void) {
 }
 
 void tela_cadastrar_cliente(void) {
-    printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///                 = = = = = Cadastrar Cliente = = = = =                   ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            Nome do Cliente:                                             ///\n");
-    printf("///            CPF do Cliente:                                              ///\n");
-    printf("///            Telefone:                                                    ///\n");
-    printf("///            Endereço:                                                    ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a próxima tela     --------------\n");
-    printf("\n");
+    char nome[50], cpf[15], telefone[15], endereco[100];
+    printf("\nNome do Cliente: ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = '\0'; // Remove o '\n'
+
+    printf("CPF do Cliente: ");
+    fgets(cpf, sizeof(cpf), stdin);
+    cpf[strcspn(cpf, "\n")] = '\0'; // Remove o '\n'
+
+    printf("Telefone: ");
+    fgets(telefone, sizeof(telefone), stdin);
+    telefone[strcspn(telefone, "\n")] = '\0'; // Remove o '\n'
+
+    printf("Endereço: ");
+    fgets(endereco, sizeof(endereco), stdin);
+    endereco[strcspn(endereco, "\n")] = '\0'; // Remove o '\n'
+
+    salvar_cliente(nome, cpf, telefone, endereco);
+    printf("Cliente cadastrado com sucesso!\n");
 }
 
 void tela_pesquisar_cliente(void) {
-    printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///                 = = = = = Pesquisar Cliente = = = = =                   ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            CPF do Cliente:                                              ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a próxima tela     --------------\n");
-    printf("\n");
+    listar_clientes();
+    printf("Pressione ENTER para continuar...");
+    getchar();
+}
+
+void deletar_cliente(const char* cpf) {
+    FILE* arquivo = fopen("clientes.txt", "r");
+    FILE* temp = fopen("temp_clientes.txt", "w");
+    if (arquivo == NULL || temp == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    char linha[256];
+    int encontrado = 0;
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        char cpf_atual[15];
+        sscanf(linha, "%*[^;];%14[^;]", cpf_atual); // Lê o CPF do cliente
+        if (strcmp(cpf, cpf_atual) != 0) {
+            fputs(linha, temp); // Escreve no arquivo temporário se o CPF não corresponder
+        } else {
+            encontrado = 1;
+        }
+    }
+
+    fclose(arquivo);
+    fclose(temp);
+
+    remove("clientes.txt");
+    rename("temp_clientes.txt", "clientes.txt");
+
+    if (encontrado) {
+        printf("Cliente deletado com sucesso.\n");
+    } else {
+        printf("Cliente com CPF %s não encontrado.\n", cpf);
+    }
+}
+
+void editar_cliente(const char* cpf) {
+    FILE* arquivo = fopen("clientes.txt", "r");
+    FILE* temp = fopen("temp_clientes.txt", "w");
+    if (arquivo == NULL || temp == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    char linha[256];
+    int encontrado = 0;
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        char cpf_atual[15];
+        sscanf(linha, "%*[^;];%14[^;]", cpf_atual); // Lê o CPF do cliente
+        if (strcmp(cpf, cpf_atual) == 0) {
+            encontrado = 1;
+            char nome[50], telefone[15], endereco[100];
+            printf("Novo nome: ");
+            fgets(nome, sizeof(nome), stdin);
+            nome[strcspn(nome, "\n")] = '\0';
+
+            printf("Novo telefone: ");
+            fgets(telefone, sizeof(telefone), stdin);
+            telefone[strcspn(telefone, "\n")] = '\0';
+
+            printf("Novo endereço: ");
+            fgets(endereco, sizeof(endereco), stdin);
+            endereco[strcspn(endereco, "\n")] = '\0';
+
+            fprintf(temp, "%s;%s;%s;%s\n", nome, cpf, telefone, endereco);
+        } else {
+            fputs(linha, temp); // Escreve no arquivo temporário se o CPF não corresponder
+        }
+    }
+
+    fclose(arquivo);
+    fclose(temp);
+
+    remove("clientes.txt");
+    rename("temp_clientes.txt", "clientes.txt");
+
+    if (encontrado) {
+        printf("Cliente editado com sucesso.\n");
+    } else {
+        printf("Cliente com CPF %s não encontrado.\n", cpf);
+    }
 }
 
 void tela_editar_cliente(void) {
-    printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///                 = = = = = Editar Cliente = = = = =                      ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            CPF do Cliente:                                              ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a próxima tela     --------------\n");
-    printf("\n");
+    char cpf[15];
+    printf("Digite o CPF do cliente a ser editado: ");
+    fgets(cpf, sizeof(cpf), stdin);
+    cpf[strcspn(cpf, "\n")] = '\0'; // Remove o '\n'
+
+    editar_cliente(cpf);
 }
 
 void tela_deletar_cliente(void) {
-    printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///                 = = = = = Deletar Cliente = = = = =                     ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            CPF do Cliente:                                              ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a próxima tela     --------------\n");
-    printf("\n");
+    char cpf[15];
+    printf("Digite o CPF do cliente a ser deletado: ");
+    fgets(cpf, sizeof(cpf), stdin);
+    cpf[strcspn(cpf, "\n")] = '\0'; // Remove o '\n'
+
+    deletar_cliente(cpf);
 }
