@@ -24,6 +24,7 @@ void tela_equipe(void);
  
 int main(void) {
     setlocale(LC_ALL, "Portuguese_Brazil");
+    system("cls||clear"); // Limpa a tela no início do programa
     tela_principal();
         getchar();
         system("cls|clear");

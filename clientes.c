@@ -4,29 +4,63 @@
 
 
 void tela_clientes(void) {
-    printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
-    printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
-    printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///                 = = = = = Gerenciar Clientes = = = = =                  ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            1. Cadastrar Cliente                                         ///\n");
-    printf("///            2. Pesquisar Cliente                                         ///\n");
-    printf("///            3. Editar Cliente                                            ///\n");
-    printf("///            4. Deletar Cliente                                           ///\n");
-    printf("///            0. Sair                                                      ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a próxima tela     --------------\n");
-    printf("\n");
+    int opcao;
+    do {
+        printf("\n");
+        printf("///////////////////////////////////////////////////////////////////////////////\n");
+        printf("///                                                                         ///\n");
+        printf("///               Departamento de Computação e Tecnologia                   ///\n");
+        printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
+        printf("///                          Projeto Sig-Chapéu                             ///\n");
+        printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
+        printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
+        printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
+        printf("///                                                                         ///\n");
+        printf("///////////////////////////////////////////////////////////////////////////////\n");
+        printf("///                                                                         ///\n");
+        printf("///                 = = = = = Gerenciar Clientes = = = = =                  ///\n");
+        printf("///                                                                         ///\n");
+        printf("///            1. Cadastrar Cliente                                         ///\n");
+        printf("///            2. Pesquisar Cliente                                         ///\n");
+        printf("///            3. Editar Cliente                                            ///\n");
+        printf("///            4. Deletar Cliente                                           ///\n");
+        printf("///            0. Sair                                                      ///\n");
+        printf("///                                                                         ///\n");
+        printf("///////////////////////////////////////////////////////////////////////////////\n");
+        printf("Digite sua opção: ");
+        scanf("%d", &opcao);
+        getchar(); // Limpa o buffer do teclado
+
+        system("cls||clear"); // Limpa a tela
+
+        switch (opcao) {
+            case 1:
+                tela_cadastrar_cliente();
+                break;
+            case 2:
+                tela_pesquisar_cliente();
+                break;
+            case 3:
+                tela_editar_cliente();
+                break;
+            case 4:
+                tela_deletar_cliente();
+                break;
+            case 0:
+                printf("Voltando ao menu principal...\n");
+                break;
+            default:
+                printf("Opção inválida! Tente novamente.\n");
+                break;
+        }
+
+        if (opcao != 0) {
+            printf("Pressione ENTER para voltar ao menu de clientes...");
+            getchar();
+        }
+
+        system("cls||clear");
+    } while (opcao != 0);
 }
 
 void tela_cadastrar_cliente(void) {
