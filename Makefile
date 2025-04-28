@@ -8,7 +8,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
 # Arquivos fonte
-SRCS = main.c clientes.c produtos.c encomendas.c
+SRCS = main.c clientes.c produtos.c encomendas.c util.c
 
 # Arquivos objeto
 OBJS = $(SRCS:.c=.o)

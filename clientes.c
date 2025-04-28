@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> // Adicionado para usar funções de manipulação de strings
+#include <string.h>
 #include "clientes.h"
+#include "util.h" // Adicionado para usar as funções de validação
 
 // Função para salvar os dados de um cliente no arquivo "clientes.txt"
 void salvar_cliente(const char* nome, const char* cpf, const char* telefone, const char* endereco) {
@@ -100,12 +101,13 @@ void tela_clientes(void) {
 // Tela para cadastrar um novo cliente
 void tela_cadastrar_cliente(void) {
     char nome[50], cpf[15], telefone[15], endereco[100];
+
     printf("\nNome do Cliente: ");
     fgets(nome, sizeof(nome), stdin);
     nome[strcspn(nome, "\n")] = '\0'; // Remove o '\n'
 
-    if (strlen(nome) == 0) { // Verifica se o nome foi preenchido
-        printf("Nome não pode estar vazio. Tente novamente.\n");
+    if (!validarNome(nome)) { // Valida o nome
+        printf("Nome inválido! Deve conter apenas letras. Tente novamente.\n");
         return;
     }
 
@@ -113,8 +115,8 @@ void tela_cadastrar_cliente(void) {
     fgets(cpf, sizeof(cpf), stdin);
     cpf[strcspn(cpf, "\n")] = '\0'; // Remove o '\n'
 
-    if (strlen(cpf) == 0) { // Verifica se o CPF foi preenchido
-        printf("CPF não pode estar vazio. Tente novamente.\n");
+    if (!validarMatr(cpf)) { // Valida o CPF (usando validarMatr como exemplo de validação numérica)
+        printf("CPF inválido! Deve conter apenas dígitos e ter 10 ou 11 caracteres. Tente novamente.\n");
         return;
     }
 
@@ -122,8 +124,8 @@ void tela_cadastrar_cliente(void) {
     fgets(telefone, sizeof(telefone), stdin);
     telefone[strcspn(telefone, "\n")] = '\0'; // Remove o '\n'
 
-    if (strlen(telefone) == 0) { // Verifica se o telefone foi preenchido
-        printf("Telefone não pode estar vazio. Tente novamente.\n");
+    if (!validarFone(telefone)) { // Valida o telefone
+        printf("Telefone inválido! Deve conter exatamente 11 dígitos. Tente novamente.\n");
         return;
     }
 
