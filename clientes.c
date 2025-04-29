@@ -116,7 +116,7 @@ void tela_cadastrar_cliente(void) {
     cpf[strcspn(cpf, "\n")] = '\0'; // Remove o '\n'
 
     if (!validarMatr(cpf)) { // Valida o CPF (usando validarMatr como exemplo de validação numérica)
-        printf("CPF inválido! Deve conter apenas dígitos e ter 10 ou 11 caracteres. Tente novamente.\n");
+        printf("CPF inválido! Deve conter apenas dígitos e ter 11 caracteres. Tente novamente.\n");
         return;
     }
 

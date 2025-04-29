@@ -171,7 +171,7 @@ int validarFone(char* fone) {
 int validarMatr(char* matr) {
   int tam;
   tam = strlen(matr);
-  if (tam < 10 || tam > 11) {
+  if (tam != 11) {
     return 0;
   }
   for (int i = 0; i < tam; i++) {
