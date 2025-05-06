@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "produtos.h"
+#include "util.h" // Adicionado para usar as funções de validação
 
 void tela_produtos(void) {
     int opcao;
@@ -63,18 +64,27 @@ void tela_produtos(void) {
 }
 
 void tela_cadastrar_produto(void) {
-    printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///                 = = = = = Cadastrar Produto = = = = =                   ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            Nome do Produto:                                             ///\n");
-    printf("///            C?digo do Produto:                                           ///\n");
-    printf("///            Descri??o do Produto:                                        ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
-    printf("\n");
+    char nome[50], codigo[20];
+
+    printf("\nNome do Produto: ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = '\0'; // Remove o '\n'
+
+    if (!validarNomeProdutoOuCliente(nome)) { // Valida o nome do produto
+        printf("Nome inválido! Deve conter apenas letras. Tente novamente.\n");
+        return;
+    }
+
+    printf("Código do Produto: ");
+    fgets(codigo, sizeof(codigo), stdin);
+    codigo[strcspn(codigo, "\n")] = '\0'; // Remove o '\n'
+
+    if (!validarCodigo(codigo)) { // Valida o código do produto
+        printf("Código inválido! Deve conter apenas números. Tente novamente.\n");
+        return;
+    }
+
+    printf("Produto validado com sucesso! (Salvamento será implementado futuramente)\n");
 }
 
 void tela_pesquisar_produto(void) {

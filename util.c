@@ -181,3 +181,34 @@ int validarMatr(char* matr) {
   }
   return 1;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// Valida o nome de um produto ou cliente (apenas letras)
+/// Retorna 1 se válido, 0 caso contrário
+int validarNomeProdutoOuCliente(char* nome) {
+    return validarNome(nome); // Reutiliza a função de validação de nome
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// Valida o código de um produto ou encomenda (apenas números)
+/// Retorna 1 se válido, 0 caso contrário
+int validarCodigo(char* codigo) {
+    int tam = strlen(codigo);
+    if (tam == 0) {
+        return 0; // Código não pode ser vazio
+    }
+    for (int i = 0; i < tam; i++) {
+        if (!ehDigito(codigo[i])) {
+            return 0; // Contém caracteres não numéricos
+        }
+    }
+    return 1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// Valida a data de entrega no formato ddmmaaaa
+/// Retorna 1 se válido, 0 caso contrário
+int validarDataEntrega(char* data) {
+    return validarData(data); // Reutiliza a função de validação de data
+}
