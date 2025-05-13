@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "encomendas.h"
-#include "util.h" // Adicionado para usar as funções de validação
+#include "util.h" 
+
+typedef struct  encomenda Encomenda;
 
 void tela_encomendas(void) {
     int opcao;
@@ -20,9 +22,9 @@ void tela_encomendas(void) {
         printf("///////////////////////////////////////////////////////////////////////////////\n");
         printf("Digite sua opção: ");
         scanf("%d", &opcao);
-        getchar(); // Limpa o buffer do teclado
+        getchar(); 
 
-        system("cls||clear"); // Limpa a tela
+        system("cls||clear"); 
 
         switch (opcao) {
             case 1:
@@ -55,31 +57,31 @@ void tela_encomendas(void) {
 }
 
 void tela_cadastrar_encomenda(void) {
-    char nomeCliente[50], codigoEncomenda[20], dataEntrega[9];
+    Encomenda encomenda;
 
     printf("\nNome do Cliente: ");
-    fgets(nomeCliente, sizeof(nomeCliente), stdin);
-    nomeCliente[strcspn(nomeCliente, "\n")] = '\0'; // Remove o '\n'
+    fgets(encomenda.nomeCliente, sizeof(encomenda.nomeCliente), stdin);
+    encomenda.nomeCliente[strcspn(encomenda.nomeCliente, "\n")] = '\0'; // Remove o '\n'
 
-    if (!validarNomeProdutoOuCliente(nomeCliente)) { // Valida o nome do cliente
+    if (!validarNomeProdutoOuCliente(encomenda.nomeCliente)) { // Valida o nome do cliente
         printf("Nome inválido! Deve conter apenas letras. Tente novamente.\n");
         return;
     }
 
     printf("Código da Encomenda: ");
-    fgets(codigoEncomenda, sizeof(codigoEncomenda), stdin);
-    codigoEncomenda[strcspn(codigoEncomenda, "\n")] = '\0'; // Remove o '\n'
+    fgets(encomenda.codigoEncomenda, sizeof(encomenda.codigoEncomenda), stdin);
+    encomenda.codigoEncomenda[strcspn(encomenda.codigoEncomenda, "\n")] = '\0'; // Remove o '\n'
 
-    if (!validarCodigo(codigoEncomenda)) { // Valida o código da encomenda
+    if (!validarCodigo(encomenda.codigoEncomenda)) { // Valida o código da encomenda
         printf("Código inválido! Deve conter apenas números. Tente novamente.\n");
         return;
     }
 
     printf("Data de Entrega (ddmmaaaa): ");
-    fgets(dataEntrega, sizeof(dataEntrega), stdin);
-    dataEntrega[strcspn(dataEntrega, "\n")] = '\0'; // Remove o '\n'
+    fgets(encomenda.dataEntrega, sizeof(encomenda.dataEntrega), stdin);
+    encomenda.dataEntrega[strcspn(encomenda.dataEntrega, "\n")] = '\0';
 
-    if (!validarDataEntrega(dataEntrega)) { // Valida a data de entrega
+    if (!validarDataEntrega(encomenda.dataEntrega)) {
         printf("Data inválida! Deve estar no formato ddmmaaaa e ser uma data válida. Tente novamente.\n");
         return;
     }

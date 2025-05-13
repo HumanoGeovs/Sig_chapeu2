@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "produtos.h"
-#include "util.h" // Adicionado para usar as funções de validação
+#include "util.h" 
+
+typedef struct produto Produto;
 
 void tela_produtos(void) {
     int opcao;
@@ -64,23 +66,32 @@ void tela_produtos(void) {
 }
 
 void tela_cadastrar_produto(void) {
-    char nome[50], codigo[20];
+    Produto produto;
 
     printf("\nNome do Produto: ");
-    fgets(nome, sizeof(nome), stdin);
-    nome[strcspn(nome, "\n")] = '\0'; // Remove o '\n'
+    fgets(produto.nome, sizeof(produto.nome), stdin);
+    produto.nome[strcspn(produto.nome, "\n")] = '\0'; // Remove o '\n'
 
-    if (!validarNomeProdutoOuCliente(nome)) { // Valida o nome do produto
+    if (!validarNomeProdutoOuCliente(produto.nome)) { // Valida o nome do produto
         printf("Nome inválido! Deve conter apenas letras. Tente novamente.\n");
         return;
     }
 
     printf("Código do Produto: ");
-    fgets(codigo, sizeof(codigo), stdin);
-    codigo[strcspn(codigo, "\n")] = '\0'; // Remove o '\n'
+    fgets(produto.codigo, sizeof(produto.codigo), stdin);
+    produto.codigo[strcspn(produto.codigo, "\n")] = '\0'; // Remove o '\n'
 
-    if (!validarCodigo(codigo)) { // Valida o código do produto
+    if (!validarCodigo(produto.codigo)) { // Valida o código do produto
         printf("Código inválido! Deve conter apenas números. Tente novamente.\n");
+        return;
+    }
+
+    printf("Preço do Produto: ");
+    scanf("%f", &produto.preco);
+    getchar(); // Limpa o buffer do teclado
+
+    if (produto.preco <= 0) { // Valida o preço do produto
+        printf("Preço inválido! Deve ser maior que zero. Tente novamente.\n");
         return;
     }
 

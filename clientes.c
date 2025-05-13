@@ -4,6 +4,8 @@
 #include "clientes.h"
 #include "util.h" // Adicionado para usar as funções de validação
 
+typedef struct clientes Clientes;
+
 // Função para salvar os dados de um cliente no arquivo "clientes.txt"
 void salvar_cliente(const char* nome, const char* cpf, const char* telefone, const char* endereco) {
     FILE* arquivo = fopen("clientes.txt", "a");
@@ -100,45 +102,46 @@ void tela_clientes(void) {
 
 // Tela para cadastrar um novo cliente
 void tela_cadastrar_cliente(void) {
-    char nome[50], cpf[15], telefone[15], endereco[100];
+    Cliente cliente;
+    
 
     printf("\nNome do Cliente: ");
-    fgets(nome, sizeof(nome), stdin);
-    nome[strcspn(nome, "\n")] = '\0'; // Remove o '\n'
+    fgets(cliente.nome, sizeof(cliente.nome), stdin);
+    cliente.nome[strcspn(cliente.nome, "\n")] = '\0'; // Remove o '\n'
 
-    if (!validarNome(nome)) { // Valida o nome
+    if (!validarNome(cliente.nome)) { // Valida o nome
         printf("Nome inválido! Deve conter apenas letras. Tente novamente.\n");
         return;
     }
 
     printf("CPF do Cliente: ");
-    fgets(cpf, sizeof(cpf), stdin);
-    cpf[strcspn(cpf, "\n")] = '\0'; // Remove o '\n'
+    fgets(cliente.cpf, sizeof(cliente.cpf), stdin);
+    cliente.cpf[strcspn(cliente.cpf, "\n")] = '\0'; // Remove o '\n'
 
-    if (!validarMatr(cpf)) { // Valida o CPF (usando validarMatr como exemplo de validação numérica)
+    if (!validarMatr(cliente.cpf)) { // Valida o CPF (usando validarMatr como exemplo de validação numérica)
         printf("CPF inválido! Deve conter apenas dígitos e ter 11 caracteres. Tente novamente.\n");
         return;
     }
 
     printf("Telefone: ");
-    fgets(telefone, sizeof(telefone), stdin);
-    telefone[strcspn(telefone, "\n")] = '\0'; // Remove o '\n'
+    fgets(cliente.telefone, sizeof(cliente.telefone), stdin);
+    cliente.telefone[strcspn(cliente.telefone, "\n")] = '\0'; // Remove o '\n'
 
-    if (!validarFone(telefone)) { // Valida o telefone
+    if (!validarFone(cliente.telefone)) { // Valida o telefone
         printf("Telefone inválido! Deve conter exatamente 11 dígitos. Tente novamente.\n");
         return;
     }
 
     printf("Endereço: ");
-    fgets(endereco, sizeof(endereco), stdin);
-    endereco[strcspn(endereco, "\n")] = '\0'; // Remove o '\n'
+    fgets(cliente.endereco, sizeof(cliente.endereco), stdin);
+    cliente.endereco[strcspn(cliente.endereco, "\n")] = '\0'; // Remove o '\n'
 
-    if (strlen(endereco) == 0) { // Verifica se o endereço foi preenchido
+    if (strlen(cliente.endereco) == 0) { // Verifica se o endereço foi preenchido
         printf("Endereço não pode estar vazio. Tente novamente.\n");
         return;
     }
 
-    salvar_cliente(nome, cpf, telefone, endereco); // Salva os dados do cliente
+    salvar_cliente(cliente.nome, cliente.cpf, cliente.telefone, cliente.endereco); // Salva os dados do cliente
     printf("Cliente cadastrado com sucesso!\n");
 }
 
