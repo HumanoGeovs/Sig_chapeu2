@@ -9,22 +9,18 @@ void tela_encomendas(void) {
     int opcao;
     do {
         printf("\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("///                                                                         ///\n");
-        printf("///                 = = = = = Gerenciar Encomendas = = = = =                ///\n");
-        printf("///                                                                         ///\n");
-        printf("///            1. Cadastrar Encomenda                                       ///\n");
-        printf("///            2. Pesquisar Encomenda                                       ///\n");
-        printf("///            3. Editar Encomenda                                          ///\n");
-        printf("///            4. Deletar Encomenda                                         ///\n");
-        printf("///            0. Sair                                                      ///\n");
-        printf("///                                                                         ///\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("Digite sua opção: ");
+        printf("+============================================================================+\n");
+        printf("|                     MENU DE ENCOMENDAS - SIG CHAPEU                       |\n");
+        printf("+============================================================================+\n");
+        printf("|  1. Cadastrar Encomenda | 2. Pesquisar Encomenda | 3. Editar Encomenda    |\n");
+        printf("|-------------------------+------------------------+------------------------|\n");
+        printf("|  4. Deletar Encomenda   | 0. Voltar ao Menu Principal                     |\n");
+        printf("+============================================================================+\n");
+        printf("Escolha uma opção: ");
         scanf("%d", &opcao);
-        getchar(); 
+        getchar();
 
-        system("cls||clear"); 
+        system("cls||clear");
 
         switch (opcao) {
             case 1:
@@ -48,7 +44,7 @@ void tela_encomendas(void) {
         }
 
         if (opcao != 0) {
-            printf("Pressione ENTER para voltar ao menu de encomendas...");
+            printf("\nPressione ENTER para voltar ao menu de encomendas...");
             getchar();
         }
 

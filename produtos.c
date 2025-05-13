@@ -9,31 +9,18 @@ void tela_produtos(void) {
     int opcao;
     do {
         printf("\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("///                                                                         ///\n");
-        printf("///               Departamento de Computa??o e Tecnologia                   ///\n");
-        printf("///                  Disciplina DCT1106 -- Programa??o                      ///\n");
-        printf("///                          Projeto Sig-Chap?u                             ///\n");
-        printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-        printf("///               Projeto Sistema de Gest?o de Chapelaria                   ///\n");
-        printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
-        printf("///                                                                         ///\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("///                                                                         ///\n");
-        printf("///                 = = = = = Gerenciar Produtos = = = = =                  ///\n");
-        printf("///                                                                         ///\n");
-        printf("///            1. Cadastrar produto                                         ///\n");
-        printf("///            2. Pesquisar produto                                         ///\n");
-        printf("///            3. Editar Produto                                            ///\n");
-        printf("///            4. Deletar produto                                           ///\n");
-        printf("///            0. Sair                                                      ///\n");
-        printf("///                                                                         ///\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("Digite sua opção: ");
+        printf("+============================================================================+\n");
+        printf("|                       MENU DE PRODUTOS - SIG CHAPEU                       |\n");
+        printf("+============================================================================+\n");
+        printf("|  1. Cadastrar Produto   |  2. Pesquisar Produto   |  3. Editar Produto     |\n");
+        printf("|-------------------------+-------------------------+------------------------|\n");
+        printf("|  4. Deletar Produto     |  0. Voltar ao Menu Principal                     |\n");
+        printf("+============================================================================+\n");
+        printf("Escolha uma opção: ");
         scanf("%d", &opcao);
-        getchar(); // Limpa o buffer do teclado
+        getchar();
 
-        system("cls||clear"); // Limpa a tela
+        system("cls||clear");
 
         switch (opcao) {
             case 1:
@@ -57,7 +44,7 @@ void tela_produtos(void) {
         }
 
         if (opcao != 0) {
-            printf("Pressione ENTER para voltar ao menu de produtos...");
+            printf("\nPressione ENTER para voltar ao menu de produtos...");
             getchar();
         }
 
@@ -100,36 +87,39 @@ void tela_cadastrar_produto(void) {
 
 void tela_pesquisar_produto(void) {
     printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///                 = = = = = Pesquisar Produto = = = = =                   ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            C?digo do Produto:                                           ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("+============================================================================+\n");
+    printf("|                    PESQUISAR PRODUTO - SIG CHAPEU                         |\n");
+    printf("+============================================================================+\n");
+    printf("| Informe o código do produto para pesquisar:                                |\n");
+    printf("+----------------------------------------------------------------------------+\n");
+    printf("| Código do Produto:                                                         |\n");
+    printf("+============================================================================+\n");
+    printf("Pressione ENTER para ir para a próxima tela...\n");
+    getchar();
 }
 
 void tela_editar_produto(void) {
     printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///                 = = = = = Editar Produto = = = = =                      ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            C?digo do Produto:                                           ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("+============================================================================+\n");
+    printf("|                      EDITAR PRODUTO - SIG CHAPEU                          |\n");
+    printf("+============================================================================+\n");
+    printf("| Informe o código do produto para editar:                                   |\n");
+    printf("+----------------------------------------------------------------------------+\n");
+    printf("| Código do Produto:                                                         |\n");
+    printf("+============================================================================+\n");
+    printf("Pressione ENTER para ir para a próxima tela...\n");
+    getchar();
 }
 
 void tela_deletar_produto(void) {
     printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///                 = = = = = Deletar Produto = = = = =                     ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            C?digo do Produto:                                           ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
+    printf("+============================================================================+\n");
+    printf("|                     DELETAR PRODUTO - SIG CHAPEU                          |\n");
+    printf("+============================================================================+\n");
+    printf("| Informe o código do produto para deletar:                                  |\n");
+    printf("+----------------------------------------------------------------------------+\n");
+    printf("| Código do Produto:                                                         |\n");
+    printf("+============================================================================+\n");
+    printf("Pressione ENTER para ir para a próxima tela...\n");
+    getchar();
 }

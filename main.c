@@ -46,26 +46,14 @@ void tela_principal(void) {
 
     do {
         printf("\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("///                                                                         ///\n");
-        printf("///               Departamento de Computação e Tecnologia                   ///\n");
-        printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-        printf("///                          Projeto Sig-Chapéu                             ///\n");
-        printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-        printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
-        printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
-        printf("///                                                                         ///\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("///                                                                         ///\n");
-        printf("///            1. Cliente                                                   ///\n");
-        printf("///            2. Produtos                                                  ///\n");
-        printf("///            3. Encomendas                                                ///\n");
-        printf("///            4. Equipe                                                    ///\n");
-        printf("///            5. Sobre                                                     ///\n");
-        printf("///            0. Sair                                                      ///\n");
-        printf("///                                                                         ///\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("Digite sua opção: ");
+        printf("+============================================================================+\n");
+        printf("|                SISTEMA DE GESTAO DE CHAPELARIA - SIG CHAPEU                |\n");
+        printf("+============================================================================+\n");
+        printf("|  1. Cliente      |  2. Produtos     |  3. Encomendas                       |\n");
+        printf("|------------------+------------------+--------------------------------------|\n");
+        printf("|  4. Equipe       |  5. Sobre        |  0. Sair                             |\n");
+        printf("+============================================================================+\n");
+        printf("Escolha uma opção: ");
         scanf("%d", &opcao); // Captura a entrada do usuário
         getchar(); // Limpa o buffer do teclado
 
@@ -96,7 +84,7 @@ void tela_principal(void) {
         }
 
         if (opcao != 0) {
-            printf("Pressione ENTER para voltar ao menu principal...");
+            printf("\nPressione ENTER para voltar ao menu principal...");
             getchar(); // Aguarda o usuário pressionar ENTER
         }
 
@@ -109,57 +97,45 @@ void tela_principal(void) {
 
  
 void tela_sobre(void) {
-
     printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
-    printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
-    printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///         = = = = = Sistema de Gestão de Chapelaria = = = = =             ///\n");
-    printf("///                                                                         ///\n");
-    printf("///  Programa visa facilitar encomendas e previsão de entregas de uma       ///\n");
-    printf("///  Chapelaria ou estabelecimentos semelhantes que trabalhem com este ou   ///\n");
-    printf("///  outro tipo de produto, para assim facilitar tanto para o cliente quanto///\n");
-    printf("///  para os funcionários da chapelaria ou semelhante.                      ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
- 
-    printf("\n");
- 
+    printf("+============================================================================+\n");
+    printf("|                        SOBRE O PROJETO SIG CHAPEU                          |\n");
+    printf("+============================================================================+\n");
+    printf("| Departamento de Computação e Tecnologia                                    |\n");
+    printf("| Disciplina DCT1106 -- Programação                                          |\n");
+    printf("| Projeto Sig-Chapéu                                                         |\n");
+    printf("| Projeto Sistema de Gestão de Chapelaria                                    |\n");
+    printf("| Desenvolvido por @HumanoGeovs - 2025.1                                     |\n");
+    printf("+----------------------------------------------------------------------------+\n");
+    printf("| = = = = = Sistema de Gestão de Chapelaria = = = = =                        |\n");
+    printf("|                                                                            |\n");
+    printf("| O programa visa facilitar encomendas e previsão de entregas de uma         |\n");
+    printf("| chapelaria ou estabelecimentos semelhantes, facilitando para clientes      |\n");
+    printf("| e funcionários.                                                            |\n");
+    printf("+============================================================================+\n");
+    printf("Pressione ENTER para ir para a próxima tela...\n");
+    getchar();
+    system("cls||clear");
 }
- 
 
- 
- 
 void tela_equipe(void) {
- 
     printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///               Departamento de Computação e Tecnologia                   ///\n");
-    printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-    printf("///                          Projeto Sig-Chapéu                             ///\n");
-    printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-    printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
-    printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");;
-    printf("///            Este projeto foi desenvolvido por:                           ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            Marco Geovane Araújo                                         ///\n");
-    printf("///            E-mail: marcogeovane71@gmail.com                             ///\n");
-    printf("///            Redes sociais: @Name.Is.Marco                                ///\n");
-    printf("///            Git: https://github.com/HumanoGeovs/Sig_chapeu2.git          ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("-----------      pressione ENTER para ir para a proxima tela     --------------\n");
-    printf("\n");
+    printf("+============================================================================+\n");
+    printf("|                              EQUIPE DO PROJETO                             |\n");
+    printf("+============================================================================+\n");
+    printf("| Departamento de Computação e Tecnologia                                    |\n");
+    printf("| Disciplina DCT1106 -- Programação                                          |\n");
+    printf("| Projeto Sig-Chapéu                                                         |\n");
+    printf("| Projeto Sistema de Gestão de Chapelaria                                    |\n");
+    printf("| Desenvolvido por @HumanoGeovs - 2025.1                                     |\n");
+    printf("+----------------------------------------------------------------------------+\n");
+    printf("| Este projeto foi desenvolvido por:                                         |\n");
+    printf("|   Marco Geovane Araújo                                                     |\n");
+    printf("|   E-mail: marcogeovane71@gmail.com                                         |\n");
+    printf("|   Redes sociais: @Name.Is.Marco                                            |\n");
+    printf("|   Git: github.com/HumanoGeovs/Sig_chapeu2.git                              |\n");
+    printf("+============================================================================+\n");
+    printf("Pressione ENTER para ir para a próxima tela...\n");
+    getchar();
+    system("cls||clear");
 }

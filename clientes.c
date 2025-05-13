@@ -41,33 +41,19 @@ void listar_clientes(void) {
 void tela_clientes(void) {
     int opcao;
     do {
-        // Exibe o menu de opções
         printf("\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("///                                                                         ///\n");
-        printf("///               Departamento de Computação e Tecnologia                   ///\n");
-        printf("///                  Disciplina DCT1106 -- Programação                      ///\n");
-        printf("///                          Projeto Sig-Chapéu                             ///\n");
-        printf("///             Developed by @name.is.marco -- since Mar, 2023              ///\n");
-        printf("///               Projeto Sistema de Gestão de Chapelaria                   ///\n");
-        printf("///                  Developed by @HumanoGeovs- 2025.1                      ///\n");
-        printf("///                                                                         ///\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("///                                                                         ///\n");
-        printf("///                 = = = = = Gerenciar Clientes = = = = =                  ///\n");
-        printf("///                                                                         ///\n");
-        printf("///            1. Cadastrar Cliente                                         ///\n");
-        printf("///            2. Pesquisar Cliente                                         ///\n");
-        printf("///            3. Editar Cliente                                            ///\n");
-        printf("///            4. Deletar Cliente                                           ///\n");
-        printf("///            0. Sair                                                      ///\n");
-        printf("///                                                                         ///\n");
-        printf("///////////////////////////////////////////////////////////////////////////////\n");
-        printf("Digite sua opção: ");
+        printf("+============================================================================+\n");
+        printf("|                        MENU DE CLIENTES - SIG CHAPEU                      |\n");
+        printf("+============================================================================+\n");
+        printf("|  1. Cadastrar Cliente   |  2. Pesquisar Cliente   |  3. Editar Cliente     |\n");
+        printf("|-------------------------+-------------------------+------------------------|\n");
+        printf("|  4. Deletar Cliente     |  0. Voltar ao Menu Principal                     |\n");
+        printf("+============================================================================+\n");
+        printf("Escolha uma opção: ");
         scanf("%d", &opcao);
-        getchar(); // Limpa o buffer do teclado
+        getchar();
 
-        system("cls||clear"); // Limpa a tela
+        system("cls||clear");
 
         // Executa a ação correspondente à opção escolhida
         switch (opcao) {
@@ -92,7 +78,7 @@ void tela_clientes(void) {
         }
 
         if (opcao != 0) {
-            printf("Pressione ENTER para voltar ao menu de clientes...");
+            printf("\nPressione ENTER para voltar ao menu de clientes...");
             getchar();
         }
 
