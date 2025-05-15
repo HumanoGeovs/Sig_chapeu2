@@ -18,3 +18,4 @@ int validarEmail(char*);
 int validarData(char*);
 int validarFone(char*);
 int validarMatr(char*);
+int validarNomeProduto(const char* nome);

@@ -16,6 +16,8 @@ void tela_principal(void);
 void tela_sobre(void);
  
 void tela_equipe(void);
+ 
+void tela_integrantes(void); // Adicione a assinatura
 
 /////
 
@@ -136,6 +138,20 @@ void tela_equipe(void) {
     printf("|   Git: github.com/HumanoGeovs/Sig_chapeu2.git                              |\n");
     printf("+============================================================================+\n");
     printf("Pressione ENTER para ir para a próxima tela...\n");
+    getchar();
+    system("cls||clear");
+    tela_integrantes(); // Chama a nova tela
+}
+
+void tela_integrantes(void) {
+    printf("\n");
+    printf("+============================================================================+\n");
+    printf("| Referência de código utilizada:                                            |\n");
+    printf("|   Autor: isasalmeron                                                       |\n");
+    printf("|   Repositório: github.com/isasalmeron/arvore-b                             |\n");
+    printf("|   Trecho utilizado: Validação de nome (letras, números e espaço)           |\n");
+    printf("+============================================================================+\n");
+    printf("Pressione ENTER para voltar ao menu principal...\n");
     getchar();
     system("cls||clear");
 }

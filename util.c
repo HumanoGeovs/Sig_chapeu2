@@ -212,3 +212,16 @@ int validarCodigo(char* codigo) {
 int validarDataEntrega(char* data) {
     return validarData(data); // Reutiliza a função de validação de data
 }
+
+///////////////////////////////////////////////////////////////////////////////
+/// Valida o nome de um produto (letras e números, espaços permitidos)
+/// Retorna 1 se válido, 0 caso contrário
+int validarNomeProduto(const char* nome) {
+    for (int i = 0; nome[i] != '\0'; i++) {
+        if (!(nome[i] == ' ' || (nome[i] >= 'A' && nome[i] <= 'Z') ||
+              (nome[i] >= 'a' && nome[i] <= 'z') || (nome[i] >= '0' && nome[i] <= '9'))) {
+            return 0;
+        }
+    }
+    return 1;
+}

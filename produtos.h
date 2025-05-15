@@ -8,11 +8,14 @@ struct produto {
     float preco;
 };
 
-
 void tela_produtos(void);
 void tela_cadastrar_produto(void);
 void tela_pesquisar_produto(void);
 void tela_editar_produto(void);
 void tela_deletar_produto(void);
+
+// NOVAS FUNÇÕES
+void gerar_codigo_barras(char* codigo_gerado);
+int calcula_digito_verificador(const char *codigo);
 
 #endif
