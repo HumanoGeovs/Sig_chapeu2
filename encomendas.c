@@ -105,16 +105,12 @@ void tela_cadastrar_encomenda(void) {
     gerarCodigoEncomenda(encomenda.codigoEncomenda, sizeof(encomenda.codigoEncomenda));
 
     // Salva no arquivo
-    arquivo = fopen("encomendas.txt", "a");
+    arquivo = fopen("encomendas.bin", "ab");
     if (arquivo == NULL) {
         printf("Erro ao abrir arquivo para salvar encomenda.\n");
         return;
     }
-    fprintf(arquivo, "Código: %s\nCPF Cliente: %s\nData Entrega: %s\n", encomenda.codigoEncomenda, encomenda.cpfCliente, encomenda.dataEntrega);
-    for (int i = 0; i < numPedidos; i++) {
-        fprintf(arquivo, "Pedido %d: Código Produto: %s | Quantidade: %d | Cor/Estampa: %s\n", i+1, pedidos[i].codigoProduto, pedidos[i].quantidade, pedidos[i].corEstampa);
-    }
-    fprintf(arquivo, "-----------------------------\n");
+    fwrite(&encomenda, sizeof(Encomenda), 1, arquivo);
     fclose(arquivo);
 
     printf("Encomenda cadastrada com sucesso!\nCódigo gerado: %s\n", encomenda.codigoEncomenda);
@@ -139,83 +135,42 @@ void tela_editar_encomenda(void) {
     fgets(codigoBusca, sizeof(codigoBusca), stdin);
     codigoBusca[strcspn(codigoBusca, "\n")] = '\0';
 
-    FILE* arquivo = fopen("encomendas.txt", "r");
+    FILE* arquivo = fopen("encomendas.bin", "rb");
     if (!arquivo) {
-        printf("Nenhuma encomenda cadastrada.\nPressione ENTER para voltar...");
-        getchar();
+        printf("Nenhuma encomenda cadastrada.\n");
         return;
     }
 
-    char linha[256];
-    char encomendas[100][15][256];
-    int totalEncomendas = 0, linhaAtual = 0;
-    int encontrada = 0;
-
-    // Lê todas as encomendas
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        if (strstr(linha, "-----------------------------")) {
-            encomendas[totalEncomendas][linhaAtual][0] = '\0';
-            totalEncomendas++;
-            linhaAtual = 0;
-        } else {
-            strcpy(encomendas[totalEncomendas][linhaAtual], linha);
-            linhaAtual++;
-        }
+    Encomenda encomendas[100];
+    int total = 0, encontrada = 0;
+    while (fread(&encomendas[total], sizeof(Encomenda), 1, arquivo)) {
+        total++;
     }
     fclose(arquivo);
 
-    // Procura a encomenda pelo código
-    for (int i = 0; i < totalEncomendas; i++) {
-        char codigoLido[25] = {0};
-        // Extrai o código da linha, assumindo que está no formato "Código: <codigo>\n"
-        sscanf(encomendas[i][0], "Código: %24s", codigoLido);
-        if (strcmp(codigoLido, codigoBusca) == 0) {
-            // Encontrou exatamente o código
+    for (int i = 0; i < total; i++) {
+        if (strcmp(encomendas[i].codigoEncomenda, codigoBusca) == 0) {
+            printf("Nova data de entrega (DDMMAAAA): ");
+            fgets(encomendas[i].dataEntrega, sizeof(encomendas[i].dataEntrega), stdin);
+            encomendas[i].dataEntrega[strcspn(encomendas[i].dataEntrega, "\n")] = '\0';
             encontrada = 1;
-            printf("Encomenda encontrada:\n");
-            for (int j = 0; encomendas[i][j][0] != '\0'; j++) {
-                printf("%s", encomendas[i][j]);
-            }
-            printf("\nDigite a nova data de entrega (ddmmaaaa): ");
-            char novaData[9];
-            fgets(novaData, sizeof(novaData), stdin);
-            novaData[strcspn(novaData, "\n")] = '\0';
-
-            if (!validarDataEntrega(novaData)) {
-                printf("Data inválida! Edição cancelada.\n");
-                return;
-            }
-
-            // Atualiza a linha da data de entrega
-            for (int j = 0; encomendas[i][j][0] != '\0'; j++) {
-                if (strstr(encomendas[i][j], "Data Entrega:")) {
-                    snprintf(encomendas[i][j], sizeof(encomendas[i][j]), "Data Entrega: %s\n", novaData);
-                    break;
-                }
-            }
-            printf("Data de entrega atualizada!\n");
             break;
         }
     }
 
     if (!encontrada) {
         printf("Encomenda não encontrada.\n");
-        printf("Pressione ENTER para voltar...");
-        getchar();
         return;
     }
 
-    // Salva todas as encomendas de volta no arquivo
-    arquivo = fopen("encomendas.txt", "w");
-    for (int i = 0; i < totalEncomendas; i++) {
-        for (int j = 0; encomendas[i][j][0] != '\0'; j++) {
-            fputs(encomendas[i][j], arquivo);
-        }
-        fputs("-----------------------------\n", arquivo);
+    arquivo = fopen("encomendas.bin", "wb");
+    if (!arquivo) {
+        printf("Erro ao abrir arquivo!\n");
+        return;
     }
+    fwrite(encomendas, sizeof(Encomenda), total, arquivo);
     fclose(arquivo);
-    printf("Pressione ENTER para voltar...");
-    getchar();
+    printf("Data de entrega atualizada!\n");
 }
 
 void tela_deletar_encomenda(void) {
@@ -224,129 +179,68 @@ void tela_deletar_encomenda(void) {
     fgets(codigoBusca, sizeof(codigoBusca), stdin);
     codigoBusca[strcspn(codigoBusca, "\n")] = '\0';
 
-    FILE* arquivo = fopen("encomendas.txt", "r");
+    FILE* arquivo = fopen("encomendas.bin", "rb");
     if (!arquivo) {
-        printf("Nenhuma encomenda cadastrada.\nPressione ENTER para voltar...");
-        getchar();
+        printf("Nenhuma encomenda cadastrada.\n");
         return;
     }
 
-    char linha[256];
-    char encomendas[100][15][256];
-    int totalEncomendas = 0, linhaAtual = 0;
-    int encontrada = 0;
-
-    // Lê todas as encomendas
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        if (strstr(linha, "-----------------------------")) {
-            encomendas[totalEncomendas][linhaAtual][0] = '\0';
-            totalEncomendas++;
-            linhaAtual = 0;
-        } else {
-            strcpy(encomendas[totalEncomendas][linhaAtual], linha);
-            linhaAtual++;
-        }
+    Encomenda encomendas[100];
+    int total = 0, encontrada = 0;
+    while (fread(&encomendas[total], sizeof(Encomenda), 1, arquivo)) {
+        total++;
     }
     fclose(arquivo);
 
-    // Procura e remove a encomenda pelo código (comparação exata)
-    for (int i = 0; i < totalEncomendas; i++) {
-        char codigoLido[25] = {0};
-        sscanf(encomendas[i][0], "Código: %24s", codigoLido);
-        if (strcmp(codigoLido, codigoBusca) == 0) {
+    int novoTotal = 0;
+    for (int i = 0; i < total; i++) {
+        if (strcmp(encomendas[i].codigoEncomenda, codigoBusca) != 0) {
+            encomendas[novoTotal++] = encomendas[i];
+        } else {
             encontrada = 1;
-            encomendas[i][0][0] = '\0'; // marca como removida
-            printf("Encomenda deletada!\n");
-            break;
         }
     }
 
     if (!encontrada) {
         printf("Encomenda não encontrada.\n");
-        printf("Pressione ENTER para voltar...");
-        getchar();
         return;
     }
 
-    // Salva todas as encomendas restantes no arquivo
-    arquivo = fopen("encomendas.txt", "w");
-    for (int i = 0; i < totalEncomendas; i++) {
-        if (encomendas[i][0][0] == '\0') continue; // pula encomendas deletadas
-        for (int j = 0; encomendas[i][j][0] != '\0'; j++) {
-            fputs(encomendas[i][j], arquivo);
-        }
-        fputs("-----------------------------\n", arquivo);
+    arquivo = fopen("encomendas.bin", "wb");
+    if (!arquivo) {
+        printf("Erro ao abrir arquivo!\n");
+        return;
     }
+    fwrite(encomendas, sizeof(Encomenda), novoTotal, arquivo);
     fclose(arquivo);
-    printf("Pressione ENTER para voltar...");
-    getchar();
+    printf("Encomenda deletada!\n");
 }
 
 void tela_ver_encomendas(void) {
-    FILE* arquivo = fopen("encomendas.txt", "r");
+    FILE* arquivo = fopen("encomendas.bin", "rb");
     if (!arquivo) {
-        printf("Nenhuma encomenda cadastrada ainda.\n");
-        printf("Pressione ENTER para voltar...");
-        getchar();
+        printf("Nenhuma encomenda cadastrada.\n");
         return;
     }
-
-    char linha[256];
-    char encomendas[100][15][256]; // até 100 encomendas, até 15 linhas por encomenda
-    int totalEncomendas = 0, linhaAtual = 0;
-
-    // Lê todas as encomendas do arquivo
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        if (strstr(linha, "-----------------------------")) {
-            encomendas[totalEncomendas][linhaAtual][0] = '\0';
-            totalEncomendas++;
-            linhaAtual = 0;
-        } else {
-            strcpy(encomendas[totalEncomendas][linhaAtual], linha);
-            linhaAtual++;
+    Encomenda encomenda;
+    int encontrou = 0;
+    while (fread(&encomenda, sizeof(Encomenda), 1, arquivo)) {
+        encontrou = 1;
+        printf("\n----------------------------------------\n");
+        printf("Código: %s\n", encomenda.codigoEncomenda);
+        printf("CPF Cliente: %s\n", encomenda.cpfCliente);
+        printf("Data Entrega: %s\n", encomenda.dataEntrega);
+        for (int i = 0; i < encomenda.numPedidos; i++) {
+            printf("  Pedido %d: Produto: %s | Qtd: %d | Cor/Estampa: %s\n",
+                i + 1,
+                encomenda.pedidos[i].codigoProduto,
+                encomenda.pedidos[i].quantidade,
+                encomenda.pedidos[i].corEstampa
+            );
         }
+    }
+    if (!encontrou) {
+        printf("Nenhuma encomenda cadastrada.\n");
     }
     fclose(arquivo);
-
-    if (totalEncomendas == 0) {
-        printf("Nenhuma encomenda cadastrada ainda.\n");
-        printf("Pressione ENTER para voltar...");
-        getchar();
-        return;
-    }
-
-    int pagina = 0;
-    int totalPaginas = (totalEncomendas + ENCOMENDAS_POR_PAGINA - 1) / ENCOMENDAS_POR_PAGINA;
-    int opcao;
-
-    do {
-        system("cls||clear");
-        printf("/////////////////////// LISTA DE ENCOMENDAS ///////////////////////\n");
-        int inicio = pagina * ENCOMENDAS_POR_PAGINA;
-        int fim = inicio + ENCOMENDAS_POR_PAGINA;
-        if (fim > totalEncomendas) fim = totalEncomendas;
-
-        for (int i = inicio; i < fim; i++) {
-            printf("---------------------------------------------------------------\n");
-            for (int j = 0; encomendas[i][j][0] != '\0'; j++) {
-                printf("%s", encomendas[i][j]);
-            }
-        }
-        printf("---------------------------------------------------------------\n");
-        printf("Página %d de %d\n", pagina + 1, totalPaginas);
-        printf("1 - Próxima página\n");
-        printf("2 - Página anterior\n");
-        printf("0 - Voltar\n");
-        printf("Escolha: ");
-        scanf("%d", &opcao);
-        getchar(); // consome o ENTER
-
-        if (opcao == 1 && pagina < totalPaginas - 1) {
-            pagina++;
-        } else if (opcao == 2 && pagina > 0) {
-            pagina--;
-        } else if (opcao == 0) {
-            break;
-        }
-    } while (1);
 }

@@ -2,3 +2,6 @@
 *.o
 *.txt
 *.gch
+*.bin
+*.dat
+*.log

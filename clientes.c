@@ -6,33 +6,37 @@
 
 typedef struct clientes Clientes;
 
-// Função para salvar os dados de um cliente no arquivo "clientes.txt"
+// Função para salvar os dados de um cliente no arquivo "clientes.dat" (binário)
 void salvar_cliente(const char* nome, const char* cpf, const char* telefone, const char* endereco) {
-    FILE* arquivo = fopen("clientes.txt", "a");
+    Cliente cliente;
+    strncpy(cliente.nome, nome, sizeof(cliente.nome));
+    strncpy(cliente.cpf, cpf, sizeof(cliente.cpf));
+    strncpy(cliente.telefone, telefone, sizeof(cliente.telefone));
+    strncpy(cliente.endereco, endereco, sizeof(cliente.endereco));
+
+    FILE* arquivo = fopen("clientes.bin", "ab");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo de clientes.\n");
         return;
     }
-    fprintf(arquivo, "%s;%s;%s;%s\n", nome, cpf, telefone, endereco); // Salva os dados no formato CSV
+    fwrite(&cliente, sizeof(Cliente), 1, arquivo);
     fclose(arquivo);
 }
 
-// Função para listar todos os clientes cadastrados
+// Função para listar todos os clientes cadastrados (binário)
 void listar_clientes(void) {
-    FILE* arquivo = fopen("clientes.txt", "r");
+    FILE* arquivo = fopen("clientes.bin", "rb");
     if (arquivo == NULL) {
         printf("Nenhum cliente cadastrado.\n");
         return;
     }
-    char linha[256];
+    Cliente cliente;
     printf("Clientes cadastrados:\n");
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        char nome[50], cpf[15], telefone[15], endereco[100];
-        sscanf(linha, "%49[^;];%14[^;];%14[^;];%99[^\n]", nome, cpf, telefone, endereco); // Extrai os dados do cliente
-        printf("Nome: %s | CPF: %s\n", nome, cpf); // Exibe o nome e o CPF
-        printf("Telefone: %s\n", telefone);        // Exibe o telefone
-        printf("Endereço: %s\n", endereco);        // Exibe o endereço
-        printf("----------------------------------------\n"); // Separador entre clientes
+    while (fread(&cliente, sizeof(Cliente), 1, arquivo)) {
+        printf("Nome: %s | CPF: %s\n", cliente.nome, cliente.cpf);
+        printf("Telefone: %s\n", cliente.telefone);
+        printf("Endereço: %s\n", cliente.endereco);
+        printf("----------------------------------------\n");
     }
     fclose(arquivo);
 }
@@ -138,32 +142,30 @@ void tela_pesquisar_cliente(void) {
     getchar();
 }
 
-// Função para deletar um cliente pelo CPF
+// Função para deletar um cliente pelo CPF (binário)
 void deletar_cliente(const char* cpf) {
-    FILE* arquivo = fopen("clientes.txt", "r");
-    FILE* temp = fopen("temp_clientes.txt", "w");
+    FILE* arquivo = fopen("clientes.bin", "rb");
+    FILE* temp = fopen("temp_clientes.bin", "wb");
     if (arquivo == NULL || temp == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return;
     }
 
-    char linha[256];
+    Cliente cliente;
     int encontrado = 0;
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        char cpf_atual[15];
-        sscanf(linha, "%*[^;];%14[^;]", cpf_atual); // Lê o CPF do cliente
-        if (strcmp(cpf, cpf_atual) != 0) {
-            fputs(linha, temp); // Escreve no arquivo temporário se o CPF não corresponder
+    while (fread(&cliente, sizeof(Cliente), 1, arquivo)) {
+        if (strcmp(cpf, cliente.cpf) != 0) {
+            fwrite(&cliente, sizeof(Cliente), 1, temp);
         } else {
-            encontrado = 1; // Marca que o cliente foi encontrado
+            encontrado = 1;
         }
     }
 
     fclose(arquivo);
     fclose(temp);
 
-    remove("clientes.txt"); // Remove o arquivo original
-    rename("temp_clientes.txt", "clientes.txt"); // Renomeia o arquivo temporário
+    remove("clientes.bin");
+    rename("temp_clientes.bin", "clientes.bin");
 
     if (encontrado) {
         printf("Cliente deletado com sucesso.\n");
@@ -172,70 +174,40 @@ void deletar_cliente(const char* cpf) {
     }
 }
 
-// Função para editar os dados de um cliente pelo CPF
+// Função para editar os dados de um cliente pelo CPF (binário)
 void editar_cliente(const char* cpf) {
-    FILE* arquivo = fopen("clientes.txt", "r");
-    FILE* temp = fopen("temp_clientes.txt", "w");
+    FILE* arquivo = fopen("clientes.bin", "rb");
+    FILE* temp = fopen("temp_clientes.bin", "wb");
     if (arquivo == NULL || temp == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return;
     }
 
-    char linha[256];
+    Cliente cliente;
     int encontrado = 0;
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        char cpf_atual[15];
-        sscanf(linha, "%*[^;];%14[^;]", cpf_atual); // Lê o CPF do cliente
-        if (strcmp(cpf, cpf_atual) == 0) {
+    while (fread(&cliente, sizeof(Cliente), 1, arquivo)) {
+        if (strcmp(cpf, cliente.cpf) == 0) {
             encontrado = 1;
-            char nome[50], telefone[15], endereco[100];
             printf("Novo nome: ");
-            fgets(nome, sizeof(nome), stdin);
-            nome[strcspn(nome, "\n")] = '\0';
-
-            if (strlen(nome) == 0) {
-                printf("Nome não pode estar vazio. Tente novamente.\n");
-                fclose(arquivo);
-                fclose(temp);
-                remove("temp_clientes.txt");
-                return;
-            }
+            fgets(cliente.nome, sizeof(cliente.nome), stdin);
+            cliente.nome[strcspn(cliente.nome, "\n")] = '\0';
 
             printf("Novo telefone: ");
-            fgets(telefone, sizeof(telefone), stdin);
-            telefone[strcspn(telefone, "\n")] = '\0';
-
-            if (strlen(telefone) == 0) {
-                printf("Telefone não pode estar vazio. Tente novamente.\n");
-                fclose(arquivo);
-                fclose(temp);
-                remove("temp_clientes.txt");
-                return;
-            }
+            fgets(cliente.telefone, sizeof(cliente.telefone), stdin);
+            cliente.telefone[strcspn(cliente.telefone, "\n")] = '\0';
 
             printf("Novo endereço: ");
-            fgets(endereco, sizeof(endereco), stdin);
-            endereco[strcspn(endereco, "\n")] = '\0';
-
-            if (strlen(endereco) == 0) {
-                printf("Endereço não pode estar vazio. Tente novamente.\n");
-                fclose(arquivo);
-                fclose(temp);
-                remove("temp_clientes.txt");
-                return;
-            }
-
-            fprintf(temp, "%s;%s;%s;%s\n", nome, cpf, telefone, endereco); // Salva os novos dados
-        } else {
-            fputs(linha, temp); // Escreve no arquivo temporário se o CPF não corresponder
+            fgets(cliente.endereco, sizeof(cliente.endereco), stdin);
+            cliente.endereco[strcspn(cliente.endereco, "\n")] = '\0';
         }
+        fwrite(&cliente, sizeof(Cliente), 1, temp);
     }
 
     fclose(arquivo);
     fclose(temp);
 
-    remove("clientes.txt");
-    rename("temp_clientes.txt", "clientes.txt");
+    remove("clientes.bin");
+    rename("temp_clientes.bin", "clientes.bin");
 
     if (encontrado) {
         printf("Cliente editado com sucesso.\n");

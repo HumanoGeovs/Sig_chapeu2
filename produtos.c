@@ -4,8 +4,6 @@
 #include "produtos.h"
 #include "util.h" 
 
-typedef struct produto Produto;
-
 void tela_produtos(void) {
     int opcao;
     do {
@@ -70,14 +68,14 @@ int calcula_digito_verificador(const char *codigo) {
 
 // Função para obter o próximo código de produto (4 dígitos)
 int obter_proximo_codigo_produto() {
-    FILE *arquivo = fopen("produtos.txt", "r");
+    FILE *arquivo = fopen("produtos.bin", "rb");
     int ultimo_codigo = 0;
     if (arquivo != NULL) {
-        char linha[256];
-        while (fgets(linha, sizeof(linha), arquivo)) {
+        Produto produto;
+        while (fread(&produto, sizeof(Produto), 1, arquivo)) {
             // O código do produto está nas posições 8 a 11 do código EAN-13
             char codigo_produto[5];
-            strncpy(codigo_produto, linha + 8, 4);
+            strncpy(codigo_produto, produto.codigo + 8, 4);
             codigo_produto[4] = '\0';
             int codigo = atoi(codigo_produto);
             if (codigo > ultimo_codigo) {
@@ -136,28 +134,29 @@ void tela_cadastrar_produto(void) {
 }
 
 void listar_produtos(void) {
-    FILE* arquivo = fopen("produtos.txt", "r");
+    FILE* arquivo = fopen("produtos.bin", "rb");
     if (arquivo == NULL) {
         printf("Nenhum produto cadastrado.\n");
         return;
     }
-    char linha[256];
+    Produto produto;
     printf("\nProdutos cadastrados:\n");
     printf("-----------------------------------------------------\n");
     printf("%-15s | %-30s | %s\n", "Código de Barras", "Nome", "Preço");
     printf("-----------------------------------------------------\n");
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        char cod[20], nome[50];
-        float preco;
-        sscanf(linha, "%19[^;];%49[^;];%f", cod, nome, &preco);
-        printf("%-15s | %-30s | %.2f\n", cod, nome, preco);
+    while (fread(&produto, sizeof(Produto), 1, arquivo)) {
+        printf("%-15s | %-30s | %.2f\n", produto.codigo, produto.nome, produto.preco);
     }
     printf("-----------------------------------------------------\n");
     fclose(arquivo);
 }
 
 void tela_pesquisar_produto(void) {
-    listar_produtos();
+    char codigo[20];
+    printf("\nDigite o código de barras do produto para pesquisar: ");
+    fgets(codigo, sizeof(codigo), stdin);
+    codigo[strcspn(codigo, "\n")] = '\0';
+    pesquisar_produto(codigo);
     printf("Pressione ENTER para continuar...");
     getchar();
 }
@@ -183,33 +182,30 @@ void tela_deletar_produto(void) {
 }
 
 void salvar_produto(const Produto* produto) {
-    FILE* fp = fopen("produtos.txt", "a");
+    FILE* fp = fopen("produtos.bin", "ab");
     if (fp == NULL) {
         printf("Erro ao abrir o arquivo para salvar produto.\n");
         return;
     }
-    fprintf(fp, "%s;%s;%.2f\n", produto->codigo, produto->nome, produto->preco);
+    fwrite(produto, sizeof(Produto), 1, fp);
     fclose(fp);
 }
 
 // Função para pesquisar e exibir um produto pelo código de barras
 void pesquisar_produto(const char* codigo) {
-    FILE* arquivo = fopen("produtos.txt", "r");
+    FILE* arquivo = fopen("produtos.bin", "rb");
     if (arquivo == NULL) {
         printf("Nenhum produto cadastrado.\n");
         return;
     }
-    char linha[256];
+    Produto produto;
     int encontrado = 0;
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        char cod[20], nome[50];
-        float preco;
-        sscanf(linha, "%19[^;];%49[^;];%f", cod, nome, &preco);
-        if (strcmp(codigo, cod) == 0) {
+    while (fread(&produto, sizeof(Produto), 1, arquivo)) {
+        if (strcmp(codigo, produto.codigo) == 0) {
             printf("\nProduto encontrado:\n");
-            printf("Código de Barras: %s\n", cod);
-            printf("Nome: %s\n", nome);
-            printf("Preço: %.2f\n", preco);
+            printf("Código de Barras: %s\n", produto.codigo);
+            printf("Nome: %s\n", produto.nome);
+            printf("Preço: %.2f\n", produto.preco);
             printf("----------------------------------------\n");
             encontrado = 1;
             break;
@@ -223,41 +219,36 @@ void pesquisar_produto(const char* codigo) {
 
 // Função para editar um produto pelo código de barras
 void editar_produto(const char* codigo) {
-    FILE* arquivo = fopen("produtos.txt", "r");
-    FILE* temp = fopen("temp_produtos.txt", "w");
+    FILE* arquivo = fopen("produtos.bin", "rb");
+    FILE* temp = fopen("temp_produtos.bin", "wb");
     if (arquivo == NULL || temp == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return;
     }
 
-    char linha[256];
+    Produto produto;
     int encontrado = 0;
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        char cod[20], nome[50];
-        float preco;
-        sscanf(linha, "%19[^;];%49[^;];%f", cod, nome, &preco);
-        if (strcmp(codigo, cod) == 0) {
+    while (fread(&produto, sizeof(Produto), 1, arquivo)) {
+        if (strcmp(codigo, produto.codigo) == 0) {
             encontrado = 1;
             char novo_nome[50];
             float novo_preco;
             printf("Novo nome: ");
-            getchar(); // Limpa buffer
             fgets(novo_nome, sizeof(novo_nome), stdin);
             novo_nome[strcspn(novo_nome, "\n")] = '\0';
-
+            strncpy(produto.nome, novo_nome, sizeof(produto.nome));
             printf("Novo preço: ");
             scanf("%f", &novo_preco);
-
-            fprintf(temp, "%s;%s;%.2f\n", cod, novo_nome, novo_preco);
-        } else {
-            fputs(linha, temp);
+            getchar();
+            produto.preco = novo_preco;
         }
+        fwrite(&produto, sizeof(Produto), 1, temp);
     }
     fclose(arquivo);
     fclose(temp);
 
-    remove("produtos.txt");
-    rename("temp_produtos.txt", "produtos.txt");
+    remove("produtos.bin");
+    rename("temp_produtos.bin", "produtos.bin");
 
     if (encontrado) {
         printf("Produto editado com sucesso.\n");
@@ -268,20 +259,18 @@ void editar_produto(const char* codigo) {
 
 // Função para deletar um produto pelo código de barras
 void deletar_produto(const char* codigo) {
-    FILE* arquivo = fopen("produtos.txt", "r");
-    FILE* temp = fopen("temp_produtos.txt", "w");
+    FILE* arquivo = fopen("produtos.bin", "rb");
+    FILE* temp = fopen("temp_produtos.bin", "wb");
     if (arquivo == NULL || temp == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return;
     }
 
-    char linha[256];
+    Produto produto;
     int encontrado = 0;
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        char cod[20];
-        sscanf(linha, "%19[^;]", cod);
-        if (strcmp(codigo, cod) != 0) {
-            fputs(linha, temp);
+    while (fread(&produto, sizeof(Produto), 1, arquivo)) {
+        if (strcmp(codigo, produto.codigo) != 0) {
+            fwrite(&produto, sizeof(Produto), 1, temp);
         } else {
             encontrado = 1;
         }
@@ -289,8 +278,8 @@ void deletar_produto(const char* codigo) {
     fclose(arquivo);
     fclose(temp);
 
-    remove("produtos.txt");
-    rename("temp_produtos.txt", "produtos.txt");
+    remove("produtos.bin");
+    rename("temp_produtos.bin", "produtos.bin");
 
     if (encontrado) {
         printf("Produto deletado com sucesso.\n");
