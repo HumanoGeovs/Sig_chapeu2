@@ -8,7 +8,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
 # Arquivos fonte
-SRCS = main.c clientes.c produtos.c encomendas.c util.c
+SRCS = main.c clientes.c produtos.c encomendas.c pedidos.c util.c
 
 # Arquivos objeto
 OBJS = $(SRCS:.c=.o)
@@ -31,3 +31,5 @@ clean:
 # Regra para compilar e executar o programa
 run: $(TARGET)
 	./$(TARGET)
+
+

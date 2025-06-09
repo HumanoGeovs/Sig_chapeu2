@@ -19,3 +19,5 @@ int validarData(char*);
 int validarFone(char*);
 int validarMatr(char*);
 int validarNomeProduto(const char* nome);
+int validarCPF(const char* cpf);
+int validarDataEntrega(const char* data);

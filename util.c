@@ -209,8 +209,9 @@ int validarCodigo(char* codigo) {
 ///////////////////////////////////////////////////////////////////////////////
 /// Valida a data de entrega no formato ddmmaaaa
 /// Retorna 1 se válido, 0 caso contrário
-int validarDataEntrega(char* data) {
-    return validarData(data); // Reutiliza a função de validação de data
+int validarDataEntrega(const char* data) {
+    // Implemente a validação real conforme sua regra
+    return strlen(data) == 8; // Exemplo: ddmmaaaa
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -224,4 +225,9 @@ int validarNomeProduto(const char* nome) {
         }
     }
     return 1;
+}
+
+int validarCPF(const char* cpf) {
+    // Implemente a validação real conforme sua regra
+    return strlen(cpf) == 11; // Exemplo: CPF com 11 dígitos
 }
