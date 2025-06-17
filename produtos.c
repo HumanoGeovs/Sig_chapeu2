@@ -4,6 +4,19 @@
 #include "produtos.h"
 #include "util.h" 
 
+typedef struct produto Produto;
+
+void salvar_produto(Produto produto) {
+    FILE* arquivo = fopen("produtos.bin", "ab");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo para salvar produto.\n");
+        return;
+    }
+    fwrite(&produto, sizeof(Produto), 1, arquivo);
+    fclose(arquivo);
+}
+
+
 void tela_produtos(void) {
     int opcao;
     do {
@@ -128,7 +141,7 @@ void tela_cadastrar_produto(void) {
         return;
     }
 
-    salvar_produto(&produto);
+    salvar_produto(produto);
 
     printf("Produto cadastrado e salvo com sucesso!\n");
 }
@@ -179,19 +192,7 @@ void tela_deletar_produto(void) {
     deletar_produto(codigo);
     printf("Pressione ENTER para continuar...");
     getchar();
-}
-
-void salvar_produto(const Produto* produto) {
-    FILE* fp = fopen("produtos.bin", "ab");
-    if (fp == NULL) {
-        printf("Erro ao abrir o arquivo para salvar produto.\n");
-        return;
-    }
-    fwrite(produto, sizeof(Produto), 1, fp);
-    fclose(fp);
-}
-
-// Função para pesquisar e exibir um produto pelo código de barras
+}// Função para pesquisar e exibir um produto pelo código de barras
 void pesquisar_produto(const char* codigo) {
     FILE* arquivo = fopen("produtos.bin", "rb");
     if (arquivo == NULL) {
@@ -219,9 +220,8 @@ void pesquisar_produto(const char* codigo) {
 
 // Função para editar um produto pelo código de barras
 void editar_produto(const char* codigo) {
-    FILE* arquivo = fopen("produtos.bin", "rb");
-    FILE* temp = fopen("temp_produtos.bin", "wb");
-    if (arquivo == NULL || temp == NULL) {
+    FILE* arquivo = fopen("produtos.bin", "r+b");
+    if (arquivo == NULL ) {
         printf("Erro ao abrir o arquivo.\n");
         return;
     }
@@ -231,24 +231,36 @@ void editar_produto(const char* codigo) {
     while (fread(&produto, sizeof(Produto), 1, arquivo)) {
         if (strcmp(codigo, produto.codigo) == 0) {
             encontrado = 1;
-            char novo_nome[50];
-            float novo_preco;
-            printf("Novo nome: ");
-            fgets(novo_nome, sizeof(novo_nome), stdin);
-            novo_nome[strcspn(novo_nome, "\n")] = '\0';
-            strncpy(produto.nome, novo_nome, sizeof(produto.nome));
-            printf("Novo preço: ");
-            scanf("%f", &novo_preco);
-            getchar();
-            produto.preco = novo_preco;
+            printf("Produto encontrado:\n");
+            printf("Código de Barras: %s\n", produto.codigo);
+            printf("Nome: %s\n", produto.nome);
+            printf("Preço: %.2f\n", produto.preco);
+
+            printf("\nDigite o novo nome do produto: ");
+            fgets(produto.nome, sizeof(produto.nome), stdin);
+            produto.nome[strcspn(produto.nome, "\n")] = '\0'; // Remove o '\n'
+
+            if (!validarNomeProduto(produto.nome)) {
+                printf("Nome inválido! Só pode conter letras, números e espaço. Tente novamente.\n");
+                return;
+            }
+
+            printf("Digite o novo preço do produto: ");
+            scanf("%f", &produto.preco);
+            getchar(); // Limpa o buffer do teclado
+
+            if (produto.preco <= 0) {
+                printf("Preço inválido! Deve ser maior que zero. Tente novamente.\n");
+                return;
+            }
+
+            fseek(arquivo, -1 * sizeof(Produto), SEEK_CUR); // Volta para o início do registro
+            fwrite(&produto, sizeof(Produto), 1, arquivo); // Atualiza o produto no arquivo
+            fflush(arquivo); // Garante que os dados sejam gravados imediatamente
+            break; // Sai do loop após editar o produto
         }
-        fwrite(&produto, sizeof(Produto), 1, temp);
     }
     fclose(arquivo);
-    fclose(temp);
-
-    remove("produtos.bin");
-    rename("temp_produtos.bin", "produtos.bin");
 
     if (encontrado) {
         printf("Produto editado com sucesso.\n");
@@ -263,17 +275,19 @@ void deletar_produto(const char* codigo) {
     FILE* temp = fopen("temp_produtos.bin", "wb");
     if (arquivo == NULL || temp == NULL) {
         printf("Erro ao abrir o arquivo.\n");
+        if (arquivo) fclose(arquivo);
+        if (temp) fclose(temp);
         return;
     }
 
     Produto produto;
     int encontrado = 0;
     while (fread(&produto, sizeof(Produto), 1, arquivo)) {
-        if (strcmp(codigo, produto.codigo) != 0) {
-            fwrite(&produto, sizeof(Produto), 1, temp);
-        } else {
+        if (strcmp(codigo, produto.codigo) == 0) {
             encontrado = 1;
+            continue; // Pula o produto a ser deletado
         }
+        fwrite(&produto, sizeof(Produto), 1, temp); // Escreve os produtos restantes no arquivo temporário
     }
     fclose(arquivo);
     fclose(temp);
