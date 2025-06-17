@@ -7,13 +7,7 @@
 typedef struct clientes Clientes;
 
 // Função para salvar os dados de um cliente no arquivo "clientes.dat" (binário)
-void salvar_cliente(const char* nome, const char* cpf, const char* telefone, const char* endereco) {
-    Cliente cliente;
-    strncpy(cliente.nome, nome, sizeof(cliente.nome));
-    strncpy(cliente.cpf, cpf, sizeof(cliente.cpf));
-    strncpy(cliente.telefone, telefone, sizeof(cliente.telefone));
-    strncpy(cliente.endereco, endereco, sizeof(cliente.endereco));
-
+void salvar_cliente(Cliente cliente) {
     FILE* arquivo = fopen("clientes.bin", "ab");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo de clientes.\n");
@@ -33,10 +27,14 @@ void listar_clientes(void) {
     Cliente cliente;
     printf("Clientes cadastrados:\n");
     while (fread(&cliente, sizeof(Cliente), 1, arquivo)) {
-        printf("Nome: %s | CPF: %s\n", cliente.nome, cliente.cpf);
-        printf("Telefone: %s\n", cliente.telefone);
-        printf("Endereço: %s\n", cliente.endereco);
-        printf("----------------------------------------\n");
+        if (cliente.status == 1) {   
+        
+         printf("Nome: %s | CPF: %s\n", cliente.nome, cliente.cpf);
+         printf("Telefone: %s\n", cliente.telefone);
+         printf("Endereço: %s\n", cliente.endereco);
+         printf("Status: %s\n", cliente.status ? "Ativo" : "Inativo");
+         printf("----------------------------------------\n");
+        }
     }
     fclose(arquivo);
 }
@@ -130,8 +128,8 @@ void tela_cadastrar_cliente(void) {
         printf("Endereço não pode estar vazio. Tente novamente.\n");
         return;
     }
-
-    salvar_cliente(cliente.nome, cliente.cpf, cliente.telefone, cliente.endereco); // Salva os dados do cliente
+    cliente.status = 1;
+    salvar_cliente(cliente); // Salva os dados do cliente
     printf("Cliente cadastrado com sucesso!\n");
 }
 
@@ -144,9 +142,8 @@ void tela_pesquisar_cliente(void) {
 
 // Função para deletar um cliente pelo CPF (binário)
 void deletar_cliente(const char* cpf) {
-    FILE* arquivo = fopen("clientes.bin", "rb");
-    FILE* temp = fopen("temp_clientes.bin", "wb");
-    if (arquivo == NULL || temp == NULL) {
+    FILE* arquivo = fopen("clientes.bin", "r+b");
+    if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return;
     }
@@ -154,20 +151,24 @@ void deletar_cliente(const char* cpf) {
     Cliente cliente;
     int encontrado = 0;
     while (fread(&cliente, sizeof(Cliente), 1, arquivo)) {
-        if (strcmp(cpf, cliente.cpf) != 0) {
-            fwrite(&cliente, sizeof(Cliente), 1, temp);
-        } else {
+
+        printf("CPF informado: <%s>\n", cpf);
+        printf("CPF: <%s>\n", cliente.cpf);
+
+
+        if (strcmp(cpf, cliente.cpf) == 0 && cliente.status == 1) {
+            cliente.status = 0; // Marca o cliente como deletado
+            fseek(arquivo, -1 * sizeof(Cliente), SEEK_CUR); // Volta para o início do registro
+            fwrite(&cliente, sizeof(Cliente), 1, arquivo);
             encontrado = 1;
+            break; // Sai do loop após encontrar o cliente
         }
     }
 
     fclose(arquivo);
-    fclose(temp);
-
-    remove("clientes.bin");
-    rename("temp_clientes.bin", "clientes.bin");
-
+    
     if (encontrado) {
+
         printf("Cliente deletado com sucesso.\n");
     } else {
         printf("Cliente com CPF %s não encontrado.\n", cpf);
@@ -176,9 +177,8 @@ void deletar_cliente(const char* cpf) {
 
 // Função para editar os dados de um cliente pelo CPF (binário)
 void editar_cliente(const char* cpf) {
-    FILE* arquivo = fopen("clientes.bin", "rb");
-    FILE* temp = fopen("temp_clientes.bin", "wb");
-    if (arquivo == NULL || temp == NULL) {
+    FILE* arquivo = fopen("clientes.bin", "r+b");
+    if (arquivo == NULL ) {
         printf("Erro ao abrir o arquivo.\n");
         return;
     }
@@ -199,15 +199,12 @@ void editar_cliente(const char* cpf) {
             printf("Novo endereço: ");
             fgets(cliente.endereco, sizeof(cliente.endereco), stdin);
             cliente.endereco[strcspn(cliente.endereco, "\n")] = '\0';
+            fseek(arquivo, -1*sizeof(Cliente), SEEK_CUR);
+            fwrite(&cliente, sizeof(Cliente), 1, arquivo);
         }
-        fwrite(&cliente, sizeof(Cliente), 1, temp);
+        
     }
-
     fclose(arquivo);
-    fclose(temp);
-
-    remove("clientes.bin");
-    rename("temp_clientes.bin", "clientes.bin");
 
     if (encontrado) {
         printf("Cliente editado com sucesso.\n");
