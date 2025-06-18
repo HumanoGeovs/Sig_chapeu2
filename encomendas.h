@@ -8,6 +8,7 @@ typedef struct {
     char dataEntrega[9];
     Pedido pedidos[20];
     int numPedidos;
+    int status; // 1 = ativo, 0 = inativo
 } Encomenda;
 
 void tela_cadastrar_encomenda(void);

@@ -103,6 +103,13 @@ void tela_cadastrar_encomenda(void) {
     }
 
     gerarCodigoEncomenda(encomenda.codigoEncomenda, sizeof(encomenda.codigoEncomenda));
+    encomenda.status = 1; // Encomenda ativa ao cadastrar
+
+    // Antes de salvar:
+    encomenda.numPedidos = numPedidos;
+    for (int i = 0; i < numPedidos; i++) {
+        encomenda.pedidos[i] = pedidos[i];
+    }
 
     // Salva no arquivo
     arquivo = fopen("encomendas.bin", "ab");
@@ -149,7 +156,7 @@ void tela_editar_encomenda(void) {
     fclose(arquivo);
 
     for (int i = 0; i < total; i++) {
-        if (strcmp(encomendas[i].codigoEncomenda, codigoBusca) == 0) {
+        if (strcmp(encomendas[i].codigoEncomenda, codigoBusca) == 0 && encomendas[i].status == 1) {
             printf("Nova data de entrega (DDMMAAAA): ");
             fgets(encomendas[i].dataEntrega, sizeof(encomendas[i].dataEntrega), stdin);
             encomendas[i].dataEntrega[strcspn(encomendas[i].dataEntrega, "\n")] = '\0';
@@ -159,7 +166,7 @@ void tela_editar_encomenda(void) {
     }
 
     if (!encontrada) {
-        printf("Encomenda não encontrada.\n");
+        printf("Encomenda não encontrada ou está inativa.\n");
         return;
     }
 
@@ -179,41 +186,30 @@ void tela_deletar_encomenda(void) {
     fgets(codigoBusca, sizeof(codigoBusca), stdin);
     codigoBusca[strcspn(codigoBusca, "\n")] = '\0';
 
-    FILE* arquivo = fopen("encomendas.bin", "rb");
+    FILE* arquivo = fopen("encomendas.bin", "r+b");
     if (!arquivo) {
         printf("Nenhuma encomenda cadastrada.\n");
         return;
     }
 
-    Encomenda encomendas[100];
-    int total = 0, encontrada = 0;
-    while (fread(&encomendas[total], sizeof(Encomenda), 1, arquivo)) {
-        total++;
-    }
-    fclose(arquivo);
-
-    int novoTotal = 0;
-    for (int i = 0; i < total; i++) {
-        if (strcmp(encomendas[i].codigoEncomenda, codigoBusca) != 0) {
-            encomendas[novoTotal++] = encomendas[i];
-        } else {
+    Encomenda encomenda;
+    int encontrada = 0;
+    while (fread(&encomenda, sizeof(Encomenda), 1, arquivo)) {
+        if (strcmp(encomenda.codigoEncomenda, codigoBusca) == 0 && encomenda.status == 1) {
+            encomenda.status = 0; // Marca como inativa
+            fseek(arquivo, -1 * (long)sizeof(Encomenda), SEEK_CUR);
+            fwrite(&encomenda, sizeof(Encomenda), 1, arquivo);
             encontrada = 1;
+            break;
         }
     }
-
-    if (!encontrada) {
-        printf("Encomenda não encontrada.\n");
-        return;
-    }
-
-    arquivo = fopen("encomendas.bin", "wb");
-    if (!arquivo) {
-        printf("Erro ao abrir arquivo!\n");
-        return;
-    }
-    fwrite(encomendas, sizeof(Encomenda), novoTotal, arquivo);
     fclose(arquivo);
-    printf("Encomenda deletada!\n");
+
+    if (encontrada) {
+        printf("Encomenda deletada!\n");
+    } else {
+        printf("Encomenda não encontrada ou já está inativa.\n");
+    }
 }
 
 void tela_ver_encomendas(void) {
@@ -225,18 +221,20 @@ void tela_ver_encomendas(void) {
     Encomenda encomenda;
     int encontrou = 0;
     while (fread(&encomenda, sizeof(Encomenda), 1, arquivo)) {
-        encontrou = 1;
-        printf("\n----------------------------------------\n");
-        printf("Código: %s\n", encomenda.codigoEncomenda);
-        printf("CPF Cliente: %s\n", encomenda.cpfCliente);
-        printf("Data Entrega: %s\n", encomenda.dataEntrega);
-        for (int i = 0; i < encomenda.numPedidos; i++) {
-            printf("  Pedido %d: Produto: %s | Qtd: %d | Cor/Estampa: %s\n",
-                i + 1,
-                encomenda.pedidos[i].codigoProduto,
-                encomenda.pedidos[i].quantidade,
-                encomenda.pedidos[i].corEstampa
-            );
+        if (encomenda.status == 1) { // Só mostra ativas
+            encontrou = 1;
+            printf("\n----------------------------------------\n");
+            printf("Código: %s\n", encomenda.codigoEncomenda);
+            printf("CPF Cliente: %s\n", encomenda.cpfCliente);
+            printf("Data Entrega: %s\n", encomenda.dataEntrega);
+            for (int i = 0; i < encomenda.numPedidos; i++) { // CORREÇÃO AQUI!
+                printf("  Pedido %d: Produto: %s | Qtd: %d | Cor/Estampa: %s\n",
+                    i + 1,
+                    encomenda.pedidos[i].codigoProduto,
+                    encomenda.pedidos[i].quantidade,
+                    encomenda.pedidos[i].corEstampa
+                );
+            }
         }
     }
     if (!encontrou) {
