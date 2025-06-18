@@ -154,25 +154,73 @@ void tela_cadastrar_produto(void) {
 
     printf("Produto cadastrado e salvo com sucesso!\n");
 }
-
 void listar_produtos(void) {
     FILE* arquivo = fopen("produtos.bin", "rb");
     if (arquivo == NULL) {
         printf("Nenhum produto cadastrado.\n");
         return;
     }
+
     Produto produto;
-    printf("\nProdutos cadastrados:\n");
-    printf("-----------------------------------------------------\n");
-    printf("%-15s | %-30s | %s\n", "Código de Barras", "Nome", "Preço");
-    printf("-----------------------------------------------------\n");
+    Produto produtos[1000]; // Array para armazenar os produtos
+    int total_produtos = 0;
+
+    // Carrega os produtos ativos no array
     while (fread(&produto, sizeof(Produto), 1, arquivo)) {
-        if (produto.status == 1) { // Só mostra ativos
-            printf("%-15s | %-30s | %.2f\n", produto.codigo, produto.nome, produto.preco);
+        if (produto.status == 1) {
+            produtos[total_produtos++] = produto;
         }
     }
-    printf("-----------------------------------------------------\n");
     fclose(arquivo);
+
+    if (total_produtos == 0) {
+        printf("Nenhum produto ativo cadastrado.\n");
+        return;
+    }
+
+    int pagina_atual = 0;
+    int total_paginas = (total_produtos + 11) / 12; // Calcula o número total de páginas
+
+    while (1) {
+        system("cls||clear");
+        printf("\nProdutos cadastrados - Página %d de %d:\n", pagina_atual + 1, total_paginas);
+        printf("-----------------------------------------------------\n");
+        printf("%-15s | %-30s | %s\n", "Código de Barras", "Nome", "Preço");
+        printf("-----------------------------------------------------\n");
+
+        int inicio = pagina_atual * 12;
+        int fim = inicio + 12;
+        if (fim > total_produtos) fim = total_produtos;
+
+        for (int i = inicio; i < fim; i++) {
+            printf("%-15s | %-30s | %.2f\n", produtos[i].codigo, produtos[i].nome, produtos[i].preco);
+        }
+
+        printf("-----------------------------------------------------\n");
+
+        if (total_paginas > 1) {
+            printf("Aperte 1 para ir para a próxima página\n");
+            printf("Aperte 2 para voltar para a página anterior\n");
+        }
+        printf("Aperte 0 para retornar\n");
+
+        int opcao;
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        if (opcao == 0) {
+            break;
+        } else if (opcao == 1 && pagina_atual < total_paginas - 1) {
+            pagina_atual++;
+        } else if (opcao == 2 && pagina_atual > 0) {
+            pagina_atual--;
+        } else {
+            printf("Opção inválida! Tente novamente.\n");
+            printf("Pressione ENTER para continuar...");
+            getchar();
+        }
+    }
 }
 
 void tela_pesquisar_produto(void) {
