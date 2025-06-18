@@ -6,6 +6,7 @@ struct produto {
     char nome[50];
     char codigo[20];
     float preco;
+    int status; // 1 = ativo, 0 = inativo
 };
 
 void tela_produtos(void);

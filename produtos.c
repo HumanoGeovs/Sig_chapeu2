@@ -141,6 +141,7 @@ void tela_cadastrar_produto(void) {
         return;
     }
 
+    produto.status = 1; // Produto ativo ao cadastrar
     salvar_produto(produto);
 
     printf("Produto cadastrado e salvo com sucesso!\n");
@@ -158,7 +159,9 @@ void listar_produtos(void) {
     printf("%-15s | %-30s | %s\n", "Código de Barras", "Nome", "Preço");
     printf("-----------------------------------------------------\n");
     while (fread(&produto, sizeof(Produto), 1, arquivo)) {
-        printf("%-15s | %-30s | %.2f\n", produto.codigo, produto.nome, produto.preco);
+        if (produto.status == 1) { // Só mostra ativos
+            printf("%-15s | %-30s | %.2f\n", produto.codigo, produto.nome, produto.preco);
+        }
     }
     printf("-----------------------------------------------------\n");
     fclose(arquivo);
@@ -202,7 +205,7 @@ void pesquisar_produto(const char* codigo) {
     Produto produto;
     int encontrado = 0;
     while (fread(&produto, sizeof(Produto), 1, arquivo)) {
-        if (strcmp(codigo, produto.codigo) == 0) {
+        if (strcmp(codigo, produto.codigo) == 0 && produto.status == 1) {
             printf("\nProduto encontrado:\n");
             printf("Código de Barras: %s\n", produto.codigo);
             printf("Nome: %s\n", produto.nome);
@@ -229,7 +232,7 @@ void editar_produto(const char* codigo) {
     Produto produto;
     int encontrado = 0;
     while (fread(&produto, sizeof(Produto), 1, arquivo)) {
-        if (strcmp(codigo, produto.codigo) == 0) {
+        if (strcmp(codigo, produto.codigo) == 0 && produto.status == 1) {
             encontrado = 1;
             printf("Produto encontrado:\n");
             printf("Código de Barras: %s\n", produto.codigo);
@@ -238,7 +241,7 @@ void editar_produto(const char* codigo) {
 
             printf("\nDigite o novo nome do produto: ");
             fgets(produto.nome, sizeof(produto.nome), stdin);
-            produto.nome[strcspn(produto.nome, "\n")] = '\0'; // Remove o '\n'
+            produto.nome[strcspn(produto.nome, "\n")] = '\0';
 
             if (!validarNomeProduto(produto.nome)) {
                 printf("Nome inválido! Só pode conter letras, números e espaço. Tente novamente.\n");
@@ -247,17 +250,17 @@ void editar_produto(const char* codigo) {
 
             printf("Digite o novo preço do produto: ");
             scanf("%f", &produto.preco);
-            getchar(); // Limpa o buffer do teclado
+            getchar();
 
             if (produto.preco <= 0) {
                 printf("Preço inválido! Deve ser maior que zero. Tente novamente.\n");
                 return;
             }
 
-            fseek(arquivo, -1 * sizeof(Produto), SEEK_CUR); // Volta para o início do registro
-            fwrite(&produto, sizeof(Produto), 1, arquivo); // Atualiza o produto no arquivo
-            fflush(arquivo); // Garante que os dados sejam gravados imediatamente
-            break; // Sai do loop após editar o produto
+            fseek(arquivo, -1 * sizeof(Produto), SEEK_CUR);
+            fwrite(&produto, sizeof(Produto), 1, arquivo);
+            fflush(arquivo);
+            break;
         }
     }
     fclose(arquivo);
@@ -271,29 +274,24 @@ void editar_produto(const char* codigo) {
 
 // Função para deletar um produto pelo código de barras
 void deletar_produto(const char* codigo) {
-    FILE* arquivo = fopen("produtos.bin", "rb");
-    FILE* temp = fopen("temp_produtos.bin", "wb");
-    if (arquivo == NULL || temp == NULL) {
+    FILE* arquivo = fopen("produtos.bin", "r+b");
+    if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo.\n");
-        if (arquivo) fclose(arquivo);
-        if (temp) fclose(temp);
         return;
     }
 
     Produto produto;
     int encontrado = 0;
     while (fread(&produto, sizeof(Produto), 1, arquivo)) {
-        if (strcmp(codigo, produto.codigo) == 0) {
+        if (strcmp(codigo, produto.codigo) == 0 && produto.status == 1) {
+            produto.status = 0; // Marca como inativo
+            fseek(arquivo, -1 * sizeof(Produto), SEEK_CUR);
+            fwrite(&produto, sizeof(Produto), 1, arquivo);
             encontrado = 1;
-            continue; // Pula o produto a ser deletado
+            break;
         }
-        fwrite(&produto, sizeof(Produto), 1, temp); // Escreve os produtos restantes no arquivo temporário
     }
     fclose(arquivo);
-    fclose(temp);
-
-    remove("produtos.bin");
-    rename("temp_produtos.bin", "produtos.bin");
 
     if (encontrado) {
         printf("Produto deletado com sucesso.\n");
