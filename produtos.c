@@ -16,6 +16,14 @@ void salvar_produto(Produto produto) {
     fclose(arquivo);
 }
 
+void b_produto_por_codigo(char* codigo) {
+    printf("\nDigite o código de barras do produto para pesquisar: ");
+    fgets(codigo, 20, stdin); // Usa o parâmetro diretamente
+    codigo[strcspn(codigo, "\n")] = '\0';
+    pesquisar_produto(codigo);
+    printf("Pressione ENTER para continuar...");
+    getchar();
+}
 
 void tela_produtos(void) {
     int opcao;
@@ -168,13 +176,38 @@ void listar_produtos(void) {
 }
 
 void tela_pesquisar_produto(void) {
-    char codigo[20];
-    printf("\nDigite o código de barras do produto para pesquisar: ");
-    fgets(codigo, sizeof(codigo), stdin);
-    codigo[strcspn(codigo, "\n")] = '\0';
-    pesquisar_produto(codigo);
-    printf("Pressione ENTER para continuar...");
+    int opcao; // Declaração da variável opcao
+
+    printf("\n");
+    printf("+============================================================================+\n");
+    printf("|                       PESQUISA DE PRODUTOS - SIG CHAPEU                    |\n");
+    printf("+============================================================================+\n");
+    printf("|  1. Pesquisar Produto por Código de Barras                                 |\n");
+    printf("|  2. Listar Todos os Produtos Cadastrados                                   |\n");
+    printf("|  0. Voltar ao Menu de Produtos                                              |\n");
+    printf("+============================================================================+\n");
+    printf("Escolha uma opção: ");
+    scanf("%d", &opcao);
     getchar();
+
+    system("cls||clear");
+
+    switch (opcao) {
+        case 1:
+            char codigo[20];
+            b_produto_por_codigo(codigo);
+            break;
+        case 2:
+            listar_produtos();
+            break;
+        case 0:
+            printf("Voltando ao menu principal...\n");
+            break;
+        default:
+            printf("Opção inválida! Tente novamente.\n");
+            break;
+    }
+
 }
 
 void tela_editar_produto(void) {
