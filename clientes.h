@@ -16,4 +16,5 @@ void tela_pesquisar_cliente(void);
 void tela_editar_cliente(void);
 void tela_deletar_cliente(void);
 void salvar_cliente(Cliente);
+void listar_clientes_alfabetico(void);
 #endif
