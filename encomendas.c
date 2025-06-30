@@ -5,6 +5,7 @@
 #include "encomendas.h"
 #include "util.h"
 #include "pedidos.h" // já traz a struct Pedido
+#include "clientes.h" // Adicione este include para acessar a struct Cliente
 #define ENCOMENDAS_POR_PAGINA 3
 
 void gerarCodigoEncomenda(char* codigo, size_t tamanho) {
@@ -14,6 +15,28 @@ void gerarCodigoEncomenda(char* codigo, size_t tamanho) {
     snprintf(codigo, tamanho, "EC%04d%02d%02d%02d%02d%02d%04d",
         tm_info->tm_year + 1900, tm_info->tm_mon + 1, tm_info->tm_mday,
         tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec, aleatorio);
+}
+
+// Função auxiliar para buscar nome do cliente pelo CPF
+char* buscar_nome_cliente_por_cpf(const char* cpf) {
+    static char nome[50];
+    FILE* arq = fopen("clientes.bin", "rb");
+    if (!arq) {
+        strcpy(nome, "Desconhecido");
+        return nome;
+    }
+    Cliente cliente;
+    while (fread(&cliente, sizeof(Cliente), 1, arq)) {
+        if (cliente.status == 1 && strcmp(cliente.cpf, cpf) == 0) {
+            strncpy(nome, cliente.nome, sizeof(nome));
+            nome[sizeof(nome)-1] = '\0';
+            fclose(arq);
+            return nome;
+        }
+    }
+    fclose(arq);
+    strcpy(nome, "Desconhecido");
+    return nome;
 }
 
 void tela_encomendas(void) {
@@ -225,9 +248,9 @@ void tela_ver_encomendas(void) {
             encontrou = 1;
             printf("\n----------------------------------------\n");
             printf("Código: %s\n", encomenda.codigoEncomenda);
-            printf("CPF Cliente: %s\n", encomenda.cpfCliente);
+            printf("Cliente: %s\n", buscar_nome_cliente_por_cpf(encomenda.cpfCliente)); // Exibe nome
             printf("Data Entrega: %s\n", encomenda.dataEntrega);
-            for (int i = 0; i < encomenda.numPedidos; i++) { // CORREÇÃO AQUI!
+            for (int i = 0; i < encomenda.numPedidos; i++) {
                 printf("  Pedido %d: Produto: %s | Qtd: %d | Cor/Estampa: %s\n",
                     i + 1,
                     encomenda.pedidos[i].codigoProduto,
