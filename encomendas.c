@@ -39,6 +39,34 @@ char* buscar_nome_cliente_por_cpf(const char* cpf) {
     return nome;
 }
 
+// Função auxiliar para buscar nome do produto pelo código
+char* buscar_nome_produto_por_codigo(const char* codigoProduto) {
+    static char nomeProduto[50];
+    FILE* arq = fopen("produtos.bin", "rb");
+    if (!arq) {
+        strcpy(nomeProduto, "Desconhecido");
+        return nomeProduto;
+    }
+    // Use a struct correta, igual ao produtos.h
+    struct produto {
+        char nome[50];
+        char codigo[20];
+        float preco;
+        int status;
+    } produto;
+    while (fread(&produto, sizeof(produto), 1, arq)) {
+        if (produto.status == 1 && strcmp(produto.codigo, codigoProduto) == 0) {
+            strncpy(nomeProduto, produto.nome, sizeof(nomeProduto));
+            nomeProduto[sizeof(nomeProduto)-1] = '\0';
+            fclose(arq);
+            return nomeProduto;
+        }
+    }
+    fclose(arq);
+    strcpy(nomeProduto, "Desconhecido");
+    return nomeProduto;
+}
+
 void tela_encomendas(void) {
     int opcao;
     do {
@@ -249,11 +277,20 @@ void tela_ver_encomendas(void) {
             printf("\n----------------------------------------\n");
             printf("Código: %s\n", encomenda.codigoEncomenda);
             printf("Cliente: %s\n", buscar_nome_cliente_por_cpf(encomenda.cpfCliente)); // Exibe nome
-            printf("Data Entrega: %s\n", encomenda.dataEntrega);
+            // Exibe data no formato dd/mm/aaaa
+            if (strlen(encomenda.dataEntrega) == 8) {
+                printf("Data Entrega: %.2s/%.2s/%.4s\n",
+                    encomenda.dataEntrega,
+                    encomenda.dataEntrega + 2,
+                    encomenda.dataEntrega + 4
+                );
+            } else {
+                printf("Data Entrega: %s\n", encomenda.dataEntrega);
+            }
             for (int i = 0; i < encomenda.numPedidos; i++) {
                 printf("  Pedido %d: Produto: %s | Qtd: %d | Cor/Estampa: %s\n",
                     i + 1,
-                    encomenda.pedidos[i].codigoProduto,
+                    buscar_nome_produto_por_codigo(encomenda.pedidos[i].codigoProduto),
                     encomenda.pedidos[i].quantidade,
                     encomenda.pedidos[i].corEstampa
                 );
