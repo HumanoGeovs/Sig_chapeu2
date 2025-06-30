@@ -47,7 +47,6 @@ char* buscar_nome_produto_por_codigo(const char* codigoProduto) {
         strcpy(nomeProduto, "Desconhecido");
         return nomeProduto;
     }
-    // Use a struct correta, igual ao produtos.h
     struct produto {
         char nome[50];
         char codigo[20];
@@ -55,7 +54,8 @@ char* buscar_nome_produto_por_codigo(const char* codigoProduto) {
         int status;
     } produto;
     while (fread(&produto, sizeof(produto), 1, arq)) {
-        if (produto.status == 1 && strcmp(produto.codigo, codigoProduto) == 0) {
+        // Remover a verificação de status
+        if (strcmp(produto.codigo, codigoProduto) == 0) {
             strncpy(nomeProduto, produto.nome, sizeof(nomeProduto));
             nomeProduto[sizeof(nomeProduto)-1] = '\0';
             fclose(arq);
@@ -133,12 +133,41 @@ void tela_cadastrar_encomenda(void) {
     }
 
     while (adicionarMais && numPedidos < 20) {
-        if (tela_cadastrar_pedido(&pedidos[numPedidos])) {
-            numPedidos++;
-        } else {
-            printf("Erro ao cadastrar pedido.\n");
-            return;
-        }
+        Pedido tempPedido;
+        int prosseguir = 1;
+        // Solicita código do produto e faz verificação antes de pedir outros dados
+        do {
+            printf("Código do Produto: ");
+            fgets(tempPedido.codigoProduto, sizeof(tempPedido.codigoProduto), stdin);
+            tempPedido.codigoProduto[strcspn(tempPedido.codigoProduto, "\n")] = '\0';
+
+            char* nomeProduto = buscar_nome_produto_por_codigo(tempPedido.codigoProduto);
+            if (strcmp(nomeProduto, "Desconhecido") == 0) {
+                printf("ATENÇÃO: Produto não reconhecido!\n");
+                printf("Deseja prosseguir mesmo assim? (1-Sim / 0-Não): ");
+                scanf("%d", &prosseguir);
+                getchar();
+                if (!prosseguir) continue;
+            } else {
+                printf("Produto encontrado: %s\n", nomeProduto);
+                printf("Deseja adicionar este produto? (1-Sim / 0-Não): ");
+                scanf("%d", &prosseguir);
+                getchar();
+                if (!prosseguir) continue;
+            }
+            break;
+        } while (1);
+
+        // Agora pede os outros dados do pedido normalmente
+        printf("Quantidade: ");
+        scanf("%d", &tempPedido.quantidade);
+        getchar();
+        printf("Cor/Estampa: ");
+        fgets(tempPedido.corEstampa, sizeof(tempPedido.corEstampa), stdin);
+        tempPedido.corEstampa[strcspn(tempPedido.corEstampa, "\n")] = '\0';
+
+        pedidos[numPedidos++] = tempPedido;
+
         printf("Adicionar mais um pedido à sua encomenda? (1-Sim / 0-Não): ");
         scanf("%d", &adicionarMais);
         getchar();
