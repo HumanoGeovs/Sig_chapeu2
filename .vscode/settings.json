@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "util.h": "c",
+        "encomendas.h": "c",
+        "clientes.h": "c"
+    }
+}

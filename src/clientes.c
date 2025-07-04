@@ -12,6 +12,9 @@ typedef struct ClienteNo {
     struct ClienteNo* prox;
 } ClienteNo;
 
+// ==================== DEFINIÇÕES DE ARQUIVOS ====================
+#define ARQ_CLIENTES "data/clientes.bin"
+
 // ==================== FUNÇÕES AUXILIARES ====================
 
 // Função auxiliar para inserir cliente em ordem alfabética na lista ligada
@@ -36,7 +39,7 @@ ClienteNo* inserir_ordenado(ClienteNo* head, Cliente cliente) {
 
 // Função auxiliar para verificar se CPF já existe
 int cpf_existe(const char* cpf) {
-    FILE* arquivo = fopen("clientes.bin", "rb");
+    FILE* arquivo = fopen(ARQ_CLIENTES, "rb");
     if (arquivo == NULL) return 0;
     Cliente cliente;
     while (fread(&cliente, sizeof(Cliente), 1, arquivo)) {
@@ -51,7 +54,7 @@ int cpf_existe(const char* cpf) {
 
 // Função auxiliar para buscar cliente pelo índice na lista ordenada
 Cliente buscar_cliente_por_indice(int indice) {
-    FILE* arquivo = fopen("clientes.bin", "rb");
+    FILE* arquivo = fopen(ARQ_CLIENTES, "rb");
     ClienteNo* lista = NULL;
     Cliente cliente, resultado;
     resultado.status = 0; // status 0 indica não encontrado
@@ -83,9 +86,9 @@ Cliente buscar_cliente_por_indice(int indice) {
 
 // ==================== FUNÇÕES DE ARQUIVO ====================
 
-// Função para salvar os dados de um cliente no arquivo "clientes.dat" (binário)
+// Função para salvar os dados de um cliente no arquivo binário
 void salvar_cliente(Cliente cliente) {
-    FILE* arquivo = fopen("clientes.bin", "ab");
+    FILE* arquivo = fopen(ARQ_CLIENTES, "ab");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo de clientes.\n");
         return;
@@ -96,7 +99,7 @@ void salvar_cliente(Cliente cliente) {
 
 // Função para listar todos os clientes cadastrados (binário)
 void listar_clientes(void) {
-    FILE* arquivo = fopen("clientes.bin", "rb");
+    FILE* arquivo = fopen(ARQ_CLIENTES, "rb");
     if (arquivo == NULL) {
         printf("Nenhum cliente cadastrado.\n");
         return;
@@ -105,12 +108,11 @@ void listar_clientes(void) {
     printf("Clientes cadastrados:\n");
     while (fread(&cliente, sizeof(Cliente), 1, arquivo)) {
         if (cliente.status == 1) {   
-        
-         printf("Nome: %s | CPF: %s\n", cliente.nome, cliente.cpf);
-         printf("Telefone: %s\n", cliente.telefone);
-         printf("Endereço: %s\n", cliente.endereco);
-         printf("Status: %s\n", cliente.status ? "Ativo" : "Inativo");
-         printf("----------------------------------------\n");
+            printf("Nome: %s | CPF: %s\n", cliente.nome, cliente.cpf);
+            printf("Telefone: %s\n", cliente.telefone);
+            printf("Endereço: %s\n", cliente.endereco);
+            printf("Status: %s\n", cliente.status ? "Ativo" : "Inativo");
+            printf("----------------------------------------\n");
         }
     }
     fclose(arquivo);
@@ -118,7 +120,7 @@ void listar_clientes(void) {
 
 // Função para exibir clientes em ordem alfabética, apenas nome e CPF, numerados
 int listar_clientes_alfabetico_menu(void) {
-    FILE* arquivo = fopen("clientes.bin", "rb");
+    FILE* arquivo = fopen(ARQ_CLIENTES, "rb");
     if (arquivo == NULL) {
         printf("Nenhum cliente cadastrado.\n");
         return 0;
@@ -154,7 +156,7 @@ int listar_clientes_alfabetico_menu(void) {
 
 // Função para deletar um cliente pelo CPF (binário)
 void deletar_cliente(const char* cpf) {
-    FILE* arquivo = fopen("clientes.bin", "r+b");
+    FILE* arquivo = fopen(ARQ_CLIENTES, "r+b");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return;
@@ -163,11 +165,6 @@ void deletar_cliente(const char* cpf) {
     Cliente cliente;
     int encontrado = 0;
     while (fread(&cliente, sizeof(Cliente), 1, arquivo)) {
-
-        printf("CPF informado: <%s>\n", cpf);
-        printf("CPF: <%s>\n", cliente.cpf);
-
-
         if (strcmp(cpf, cliente.cpf) == 0 && cliente.status == 1) {
             cliente.status = 0; // Marca o cliente como deletado
             fseek(arquivo, -1 * sizeof(Cliente), SEEK_CUR); // Volta para o início do registro
@@ -180,7 +177,6 @@ void deletar_cliente(const char* cpf) {
     fclose(arquivo);
     
     if (encontrado) {
-
         printf("Cliente deletado com sucesso.\n");
     } else {
         printf("Cliente com CPF %s não encontrado.\n", cpf);
@@ -189,7 +185,7 @@ void deletar_cliente(const char* cpf) {
 
 // Função para editar os dados de um cliente pelo CPF (binário)
 void editar_cliente(const char* cpf) {
-    FILE* arquivo = fopen("clientes.bin", "r+b");
+    FILE* arquivo = fopen(ARQ_CLIENTES, "r+b");
     if (arquivo == NULL ) {
         printf("Erro ao abrir o arquivo.\n");
         return;
@@ -213,7 +209,7 @@ void editar_cliente(const char* cpf) {
             cliente.endereco[strcspn(cliente.endereco, "\n")] = '\0';
             fseek(arquivo, -1*sizeof(Cliente), SEEK_CUR);
             fwrite(&cliente, sizeof(Cliente), 1, arquivo);
-            break; // <-- Adicionado para evitar loop após editar
+            break;
         }
     }
     fclose(arquivo);

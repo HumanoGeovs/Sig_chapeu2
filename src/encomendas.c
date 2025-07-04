@@ -7,6 +7,7 @@
 #include "pedidos.h" // já traz a struct Pedido
 #include "clientes.h" // Adicione este include para acessar a struct Cliente
 #define ENCOMENDAS_POR_PAGINA 3
+#define ARQ_ENCOMENDAS "data/encomendas.bin"
 
 void gerarCodigoEncomenda(char* codigo, size_t tamanho) {
     time_t agora = time(NULL);
@@ -20,7 +21,7 @@ void gerarCodigoEncomenda(char* codigo, size_t tamanho) {
 // Função auxiliar para buscar nome do cliente pelo CPF
 char* buscar_nome_cliente_por_cpf(const char* cpf) {
     static char nome[50];
-    FILE* arq = fopen("clientes.bin", "rb");
+    FILE* arq = fopen("data/clientes.bin", "rb");
     if (!arq) {
         strcpy(nome, "Desconhecido");
         return nome;
@@ -42,7 +43,7 @@ char* buscar_nome_cliente_por_cpf(const char* cpf) {
 // Função auxiliar para buscar nome do produto pelo código
 char* buscar_nome_produto_por_codigo(const char* codigoProduto) {
     static char nomeProduto[50];
-    FILE* arq = fopen("produtos.bin", "rb");
+    FILE* arq = fopen("data/produtos.bin", "rb");
     if (!arq) {
         strcpy(nomeProduto, "Desconhecido");
         return nomeProduto;
@@ -192,7 +193,7 @@ void tela_cadastrar_encomenda(void) {
     }
 
     // Salva no arquivo
-    arquivo = fopen("encomendas.bin", "ab");
+    arquivo = fopen(ARQ_ENCOMENDAS, "ab");
     if (arquivo == NULL) {
         printf("Erro ao abrir arquivo para salvar encomenda.\n");
         return;
@@ -222,7 +223,7 @@ void tela_editar_encomenda(void) {
     fgets(codigoBusca, sizeof(codigoBusca), stdin);
     codigoBusca[strcspn(codigoBusca, "\n")] = '\0';
 
-    FILE* arquivo = fopen("encomendas.bin", "rb");
+    FILE* arquivo = fopen(ARQ_ENCOMENDAS, "rb");
     if (!arquivo) {
         printf("Nenhuma encomenda cadastrada.\n");
         return;
@@ -250,7 +251,7 @@ void tela_editar_encomenda(void) {
         return;
     }
 
-    arquivo = fopen("encomendas.bin", "wb");
+    arquivo = fopen(ARQ_ENCOMENDAS, "wb");
     if (!arquivo) {
         printf("Erro ao abrir arquivo!\n");
         return;
@@ -266,7 +267,7 @@ void tela_deletar_encomenda(void) {
     fgets(codigoBusca, sizeof(codigoBusca), stdin);
     codigoBusca[strcspn(codigoBusca, "\n")] = '\0';
 
-    FILE* arquivo = fopen("encomendas.bin", "r+b");
+    FILE* arquivo = fopen(ARQ_ENCOMENDAS, "r+b");
     if (!arquivo) {
         printf("Nenhuma encomenda cadastrada.\n");
         return;
@@ -293,7 +294,7 @@ void tela_deletar_encomenda(void) {
 }
 
 void tela_ver_encomendas(void) {
-    FILE* arquivo = fopen("encomendas.bin", "rb");
+    FILE* arquivo = fopen(ARQ_ENCOMENDAS, "rb");
     if (!arquivo) {
         printf("Nenhuma encomenda cadastrada.\n");
         return;
