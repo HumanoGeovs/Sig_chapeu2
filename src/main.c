@@ -4,9 +4,9 @@
 #include "clientes.h"
 #include "produtos.h" // Adicionado
 #include "encomendas.h"
- 
+#include <conio.h> // Para getch()
 
- 
+
 /////
  
 // Assinatura das funções
@@ -27,6 +27,7 @@ void tela_integrantes(void); // Adicione a assinatura
 int main(void) {
     setlocale(LC_ALL, "Portuguese_Brazil");
     system("cls||clear"); // Limpa a tela no início do programa
+    system("mkdir -p data"); // Cria o diretório data se não existir
     tela_principal();
         getchar();
         system("cls|clear");
@@ -44,59 +45,70 @@ int main(void) {
 
  
 void tela_principal(void) {
-    int opcao;  // Variável para armazenar a escolha do usuário
+    int opcao = 0;
+    int tecla;
+
+    const char* opcoes[] = {
+        "Cliente",
+        "Produtos",
+        "Encomendas",
+        "Equipe",
+        "Sobre",
+        "Sair"
+    };
+    int total = 6;
 
     do {
-        printf("\n");
+        system("cls||clear");
         printf("+============================================================================+\n");
-        printf("|                SISTEMA DE GESTAO DE CHAPELARIA - SIG CHAPEU                |\n");
+        printf("|                SISTEMA DE GESTAO DE CHAPELARIA - SIG CHAPEU               |\n");
         printf("+============================================================================+\n");
-        printf("|  1. Cliente      |  2. Produtos     |  3. Encomendas                       |\n");
-        printf("|------------------+------------------+--------------------------------------|\n");
-        printf("|  4. Equipe       |  5. Sobre        |  0. Sair                             |\n");
-        printf("+============================================================================+\n");
-        printf("Escolha uma opção: ");
-        scanf("%d", &opcao); // Captura a entrada do usuário
-        getchar(); // Limpa o buffer do teclado
-
-        system("cls||clear"); // Limpa a tela
-
-        switch (opcao) {
-            case 1:
-                tela_clientes(); // Chama a função de clientes
-                break;
-            case 2:
-                tela_produtos(); // Chama a função de produtos
-                break;
-            case 3:
-                tela_encomendas(); // Chama a função de encomendas
-                break;
-            case 4:
-                tela_equipe(); // Chama a função de equipe
-                break;
-            case 5:
-                tela_sobre(); // Chama a função de sobre
-                break;
-            case 0:
-                printf("Saindo do programa...\n");
-                break;
-            default:
-                printf("Opção inválida! Tente novamente.\n");
-                break;
+        for (int i = 0; i < total; i++) {
+            if (i == opcao)
+                printf(" > %-70s <\n", opcoes[i]);
+            else
+                printf("   %-70s  \n", opcoes[i]);
         }
+        printf("+============================================================================+\n");
+        printf("Use as setas ↑ ↓ e ENTER para selecionar.\n");
 
-        if (opcao != 0) {
-            printf("\nPressione ENTER para voltar ao menu principal...");
-            getchar(); // Aguarda o usuário pressionar ENTER
+        tecla = _getch();
+        if (tecla == 224) {
+            tecla = _getch();
+            if (tecla == 72) { // Cima
+                opcao = (opcao - 1 + total) % total;
+            } else if (tecla == 80) { // Baixo
+                opcao = (opcao + 1) % total;
+            }
         }
+    } while (tecla != 13); // ENTER
 
-        system("cls||clear"); // Limpa a tela antes de exibir o menu novamente
-    } while (opcao != 0);
+    system("cls||clear");
+    switch (opcao) {
+        case 0:
+            tela_clientes();
+            break;
+        case 1:
+            tela_produtos();
+            break;
+        case 2:
+            tela_encomendas();
+            break;
+        case 3:
+            tela_equipe();
+            break;
+        case 4:
+            tela_sobre();
+            break;
+        case 5:
+            printf("Saindo do programa...\n");
+            return;
+    }
+
+    printf("\nPressione ENTER para voltar ao menu principal...");
+    getchar();
+    tela_principal(); // Retorna ao menu principal após a operação
 }
- 
-
- 
-
  
 void tela_sobre(void) {
     printf("\n");

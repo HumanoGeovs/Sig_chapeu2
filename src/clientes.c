@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "clientes.h"
-#include "util.h" // Adicionado para usar as funções de validação
+#include "util.h"
+#include <conio.h>
+
+
 
 typedef struct clientes Clientes;
 
@@ -223,53 +226,66 @@ void editar_cliente(const char* cpf) {
 
 // ==================== TELAS (INTERFACE) ====================
 
-// Tela principal para gerenciar clientes
+// Menu principal de clientes com navegação por setas
 void tela_clientes(void) {
-    int opcao;
+    int opcao = 0;
+    int tecla;
+    const char* opcoes[] = {
+        "Cadastrar Cliente",
+        "Pesquisar Cliente",
+        "Editar Cliente",
+        "Deletar Cliente",
+        "Voltar ao Menu Principal"
+    };
+    int total = 5;
+
     do {
-        printf("\n");
+        system("cls||clear");
         printf("+============================================================================+\n");
         printf("|                        MENU DE CLIENTES - SIG CHAPEU                      |\n");
         printf("+============================================================================+\n");
-        printf("|  1. Cadastrar Cliente   |  2. Pesquisar Cliente   |  3. Editar Cliente     |\n");
-        printf("|-------------------------+-------------------------+------------------------|\n");
-        printf("|  4. Deletar Cliente     |  0. Voltar ao Menu Principal                     |\n");
+        for (int i = 0; i < total; i++) {
+            if (i == opcao)
+                printf(" > %-70s <\n", opcoes[i]);
+            else
+                printf("   %-70s  \n", opcoes[i]);
+        }
         printf("+============================================================================+\n");
-        printf("Escolha uma opção: ");
-        scanf("%d", &opcao);
-        getchar();
+        printf("Use as setas ↑ ↓ e ENTER para selecionar.\n");
 
-        system("cls||clear");
-
-        // Executa a ação correspondente à opção escolhida
-        switch (opcao) {
-            case 1:
-                tela_cadastrar_cliente();
-                break;
-            case 2:
-                tela_pesquisar_cliente();
-                break;
-            case 3:
-                tela_editar_cliente();
-                break;
-            case 4:
-                tela_deletar_cliente();
-                break;
-            case 0:
-                printf("Voltando ao menu principal...\n");
-                break;
-            default:
-                printf("Opção inválida! Tente novamente.\n");
-                break;
+        tecla = _getch();
+        if (tecla == 224) { // Tecla especial (seta)
+            tecla = _getch();
+        if (tecla == 72) // seta cima
+           opcao = (opcao - 1 + total) % total;
+        else if (tecla == 80) // seta baixo
+           opcao = (opcao + 1) % total;
         }
+    } while (tecla != 13); // 13 = ENTER
 
-        if (opcao != 0) {
-            printf("\nPressione ENTER para voltar ao menu de clientes...");
-            getchar();
-        }
-
-        system("cls||clear");
-    } while (opcao != 0);
+    system("cls||clear");
+    switch (opcao) {
+        case 0:
+            tela_cadastrar_cliente();
+            break;
+        case 1:
+            tela_pesquisar_cliente();
+            break;
+        case 2:
+            tela_editar_cliente();
+            break;
+        case 3:
+            tela_deletar_cliente();
+            break;
+        case 4:
+            printf("Voltando ao menu principal...\n");
+            return;
+        default:
+            break;
+    }
+    printf("\nPressione ENTER para voltar ao menu de clientes...");
+    getchar();
+    tela_clientes(); // Volta ao menu de clientes após a opção
 }
 
 // Tela para cadastrar um novo cliente
@@ -322,65 +338,129 @@ void tela_cadastrar_cliente(void) {
     printf("Cliente cadastrado com sucesso!\n");
 }
 
-// Tela para pesquisar clientes (lista todos os clientes em ordem alfabética, numerados)
+// Tela para pesquisar clientes (lista todos os clientes em ordem alfabética, numerados, com navegação por setas)
 void tela_pesquisar_cliente(void) {
-    int total, opcao;
+    FILE* arquivo = fopen(ARQ_CLIENTES, "rb");
+    if (arquivo == NULL) {
+        printf("Nenhum cliente cadastrado.\n");
+        printf("Pressione ENTER para voltar...");
+        getchar();
+        return;
+    }
+    // Monta lista ordenada
+    ClienteNo* lista = NULL;
+    Cliente cliente;
+    int total = 0;
+    while (fread(&cliente, sizeof(Cliente), 1, arquivo)) {
+        if (cliente.status == 1) {
+            lista = inserir_ordenado(lista, cliente);
+            total++;
+        }
+    }
+    fclose(arquivo);
+
+    if (total == 0) {
+        printf("Nenhum cliente ativo cadastrado.\n");
+        printf("Pressione ENTER para voltar...");
+        getchar();
+        return;
+    }
+
+    // Cria array para facilitar navegação por índice
+    ClienteNo* atual = lista;
+    Cliente* clientesArr = malloc(total * sizeof(Cliente));
+    int idx = 0;
+    while (atual != NULL) {
+        clientesArr[idx++] = atual->cliente;
+        atual = atual->prox;
+    }
+
+    int selecao = 0;
+    int tecla;
     do {
         system("cls||clear");
-        total = listar_clientes_alfabetico_menu();
-        printf("0 - Voltar\n");
-        printf("Escolha um cliente pelo número ou 0 para voltar: ");
-        scanf("%d", &opcao);
+        printf("Clientes cadastrados (ordem alfabética):\n");
+        for (int i = 0; i < total; i++) {
+            if (i == selecao)
+                printf(" > %d - Nome: %s | CPF: %s <\n", i+1, clientesArr[i].nome, clientesArr[i].cpf);
+            else
+                printf("   %d - Nome: %s | CPF: %s\n", i+1, clientesArr[i].nome, clientesArr[i].cpf);
+        }
+        printf("   Voltar\n");
+        printf("Use as setas ↑ ↓ e ENTER para selecionar.\n");
+
+        tecla = _getch();
+        if (tecla == 224) {
+            tecla = _getch();
+            if (tecla == 72 && selecao > 0) selecao--;           // Seta para cima
+            if (tecla == 80 && selecao < total) selecao++;       // Seta para baixo (até "Voltar")
+        }
+    } while (tecla != 13); // ENTER
+
+    if (selecao == total) {
+        // Voltar
+        free(clientesArr);
+        // Libera lista ligada
+        while (lista != NULL) {
+            ClienteNo* temp = lista;
+            lista = lista->prox;
+            free(temp);
+        }
+        return;
+    }
+
+    // Exibe dados completos do cliente selecionado
+    Cliente c = clientesArr[selecao];
+    free(clientesArr);
+    // Libera lista ligada
+    while (lista != NULL) {
+        ClienteNo* temp = lista;
+        lista = lista->prox;
+        free(temp);
+    }
+
+    int acao = 0;
+    const char* opcoes[] = {"Editar Cliente", "Deletar Cliente", "Voltar"};
+    int totalOp = 3;
+    do {
+        system("cls||clear");
+        printf("\n--- Dados do Cliente Selecionado ---\n");
+        printf("Nome: %s\n", c.nome);
+        printf("CPF: %s\n", c.cpf);
+        printf("Telefone: %s\n", c.telefone);
+        printf("Endereço: %s\n", c.endereco);
+        printf("Status: %s\n", c.status ? "Ativo" : "Inativo");
+        printf("------------------------------------\n");
+        for (int i = 0; i < totalOp; i++) {
+            if (i == acao)
+                printf(" > %s <\n", opcoes[i]);
+            else
+                printf("   %s\n", opcoes[i]);
+        }
+        printf("Use as setas ↑ ↓ e ENTER para selecionar.\n");
+
+        tecla = _getch();
+        if (tecla == 224) {
+            tecla = _getch();
+            if (tecla == 72 && acao > 0) acao--;
+            if (tecla == 80 && acao < totalOp-1) acao++;
+        }
+    } while (tecla != 13);
+
+    if (acao == 0) {
+        editar_cliente(c.cpf);
+        printf("\nCliente alterado com sucesso!\n");
+        printf("Pressione ENTER para voltar ao menu de clientes...");
         getchar();
-        if (opcao == 0) {
-            break;
-        }
-        if (opcao < 1 || opcao > total) {
-            printf("Opção inválida! Tente novamente.\n");
-            printf("Pressione ENTER para continuar...");
-            getchar();
-        } else {
-            // Buscar e mostrar dados completos do cliente selecionado
-            Cliente cliente = buscar_cliente_por_indice(opcao);
-            if (cliente.status == 1) {
-                printf("\n--- Dados do Cliente Selecionado ---\n");
-                printf("Nome: %s\n", cliente.nome);
-                printf("CPF: %s\n", cliente.cpf);
-                printf("Telefone: %s\n", cliente.telefone);
-                printf("Endereço: %s\n", cliente.endereco);
-                printf("Status: %s\n", cliente.status ? "Ativo" : "Inativo");
-                printf("------------------------------------\n");
-                printf("1 - Editar Cliente\n");
-                printf("2 - Deletar Cliente\n");
-                printf("0 - Voltar\n");
-                printf("Escolha uma opção: ");
-                int acao;
-                scanf("%d", &acao);
-                getchar();
-                if (acao == 1) {
-                    // Chama tela de editar já com o CPF preenchido
-                    editar_cliente(cliente.cpf);
-                    printf("\nCliente alterado com sucesso!\n");
-                    printf("Pressione ENTER para voltar ao menu de clientes...");
-                    getchar();
-                    return; // Volta ao menu de clientes
-                } else if (acao == 2) {
-                    // Chama tela de deletar já com o CPF preenchido
-                    deletar_cliente(cliente.cpf);
-                    printf("Pressione ENTER para continuar...");
-                    getchar();
-                }
-                // Se acao == 0, apenas volta ao menu de pesquisa
-            } else {
-                printf("Cliente não encontrado.\n");
-                printf("Pressione ENTER para continuar...");
-                getchar();
-            }
-        }
-    } while (1);
+    } else if (acao == 1) {
+        deletar_cliente(c.cpf);
+        printf("Pressione ENTER para continuar...");
+        getchar();
+    }
+    // Se acao == 2, apenas volta ao menu de pesquisa
 }
 
-// Função para editar um cliente
+// Tela para editar um cliente
 void tela_editar_cliente(void) {
     char cpf[15];
     printf("Digite o CPF do cliente a ser editado: ");
@@ -388,6 +468,8 @@ void tela_editar_cliente(void) {
     cpf[strcspn(cpf, "\n")] = '\0'; // Remove o '\n'
 
     editar_cliente(cpf);
+    printf("Pressione ENTER para continuar...");
+    getchar();
 }
 
 // Tela para deletar um cliente
@@ -398,4 +480,6 @@ void tela_deletar_cliente(void) {
     cpf[strcspn(cpf, "\n")] = '\0'; // Remove o '\n'
 
     deletar_cliente(cpf);
+    printf("Pressione ENTER para continuar...");
+    getchar();
 }
