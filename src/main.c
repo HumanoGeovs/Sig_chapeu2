@@ -27,7 +27,7 @@ void tela_integrantes(void); // Adicione a assinatura
 int main(void) {
     setlocale(LC_ALL, "Portuguese_Brazil");
     system("cls||clear"); // Limpa a tela no início do programa
-    system("mkdir -p data"); // Cria o diretório data se não existir
+    system("mkdir data"); // Cria o diretório data se não existir
     tela_principal();
         getchar();
         system("cls|clear");
